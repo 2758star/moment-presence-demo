@@ -11,7 +11,7 @@
   --ink:#111111; --paper:#F2F2EF; --mid:#777777;
   --b:3px solid #111; --sh:5px 5px 0 #111; --sh-lg:7px 7px 0 #111;
 }
-*{margin:0;padding:0;box-sizing:border-box;border-radius:0!important;}
+*{margin:0;padding:0;box-sizing:border-box;border-radius:0!important;}button:focus,button:focus-visible{outline:none!important;}
 html{scroll-behavior:smooth;}
 body{
   background:var(--paper); font-family:'Noto Sans SC',sans-serif;
@@ -463,22 +463,62 @@ section .inner{padding:96px 64px;}
   <div style="border:3px solid #111; box-shadow:7px 7px 0 #111; overflow:hidden; margin-top:48px;">
     <div style="display:grid; grid-template-columns:1fr 1fr;">
       <div style="background:#D92B1E; padding:48px; border-right:3px solid #111;">
-        <div class="pain-tag">✕ BEFORE · 传统广告模式</div>
-        <div class="pain-title">强插广告，毫无感知</div>
-        <ul class="pain-list">
-          <li>不分场合，剧情高潮直接打断</li>
-          <li>用户跳过率 67%，品牌无效曝光</li>
-          <li>广告消失即消失，零资产沉淀</li>
-        </ul>
+        <span style="display:inline-block; background:rgba(0,0,0,0.2); color:#fff;
+                     font-family:'DM Mono',monospace; font-size:11px;
+                     letter-spacing:2px; padding:4px 12px; margin-bottom:24px;">
+          ✕  BEFORE · 传统广告模式
+        </span>
+        <h3 style="font-size:32px; font-weight:900; color:#fff; margin-bottom:32px;">
+          强插广告，毫无感知
+        </h3>
+        <div style="display:flex;flex-direction:column;gap:0;">
+          <div style="display:flex;align-items:center;gap:12px;
+                      padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.15);">
+            <span style="color:#FFE100;font-size:20px;font-weight:900;flex-shrink:0;">×</span>
+            <span style="font-size:15px;color:rgba(255,255,255,0.9);">
+              不分场合，剧情高潮直接打断</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;
+                      padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.15);">
+            <span style="color:#FFE100;font-size:20px;font-weight:900;flex-shrink:0;">×</span>
+            <span style="font-size:15px;color:rgba(255,255,255,0.9);">
+              用户跳过率 67%，品牌无效曝光</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 0;">
+            <span style="color:#FFE100;font-size:20px;font-weight:900;flex-shrink:0;">×</span>
+            <span style="font-size:15px;color:rgba(255,255,255,0.9);">
+              广告消失即消失，零资产沉淀</span>
+          </div>
+        </div>
       </div>
       <div style="background:#0B38C8; padding:48px;">
-        <div class="pain-tag">✓ AFTER · 此刻在场</div>
-        <div class="pain-title">感知时机，随场景共鸣</div>
-        <ul class="pain-list">
-          <li>AI 判断情绪窗口，高潮期静默不介入</li>
-          <li>缓冲期轻量节点，用户主动表达意愿</li>
-          <li>互动结果沉淀为可保存的数字资产</li>
-        </ul>
+        <span style="display:inline-block; background:rgba(255,255,255,0.15); color:#FFE100;
+                     font-family:'DM Mono',monospace; font-size:11px;
+                     letter-spacing:2px; padding:4px 12px; margin-bottom:24px;">
+          ✓  AFTER · 此刻在场
+        </span>
+        <h3 style="font-size:32px; font-weight:900; color:#FFE100; margin-bottom:32px;">
+          感知时机，随场景共鸣
+        </h3>
+        <div style="display:flex;flex-direction:column;gap:0;">
+          <div style="display:flex;align-items:center;gap:12px;
+                      padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.15);">
+            <span style="color:#FFE100;font-size:20px;font-weight:900;flex-shrink:0;">✓</span>
+            <span style="font-size:15px;color:rgba(255,255,255,0.9);">
+              AI 判断情绪窗口，高潮期静默不介入</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;
+                      padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.15);">
+            <span style="color:#FFE100;font-size:20px;font-weight:900;flex-shrink:0;">✓</span>
+            <span style="font-size:15px;color:rgba(255,255,255,0.9);">
+              缓冲期轻量节点，用户主动表达意愿</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 0;">
+            <span style="color:#FFE100;font-size:20px;font-weight:900;flex-shrink:0;">✓</span>
+            <span style="font-size:15px;color:rgba(255,255,255,0.9);">
+              互动结果沉淀为可保存的数字资产</span>
+          </div>
+        </div>
       </div>
     </div>
     <div style="background:#111; padding:24px 48px; text-align:center; border-top:3px solid #111;">
@@ -544,7 +584,7 @@ section .inner{padding:96px 64px;}
         border:3px solid #CCC; border-right:none;
         padding:12px 28px; font-size:13px; font-weight:700;
         cursor:not-allowed; pointer-events:none;
-        font-family:inherit;">
+        font-family:inherit; outline:none;">
         传统广告介入
       </button>
       <button id="btn-buffer" style="
@@ -552,7 +592,7 @@ section .inner{padding:96px 64px;}
         border:3px solid #CCC;
         padding:12px 28px; font-size:13px; font-weight:700;
         cursor:not-allowed; pointer-events:none;
-        font-family:inherit;">
+        font-family:inherit; outline:none;">
         AI 缓冲介入
       </button>
     </div>
