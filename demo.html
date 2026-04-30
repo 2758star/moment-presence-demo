@@ -460,28 +460,30 @@ section .inner{padding:96px 64px;}
   </div>
 
     <!-- Pain point contrast -->
-  <div style="border:3px solid #111; box-shadow:7px 7px 0 #111; overflow:hidden;">
-  <div class="pain-grid">
-    <div class="pain-left">
-      <div class="pain-tag">✕ BEFORE · 传统广告模式</div>
-      <div class="pain-title">强插广告，毫无感知</div>
-      <ul class="pain-list">
-        <li>不分场合，剧情高潮直接打断</li>
-        <li>用户跳过率 67%，品牌无效曝光</li>
-        <li>广告消失即消失，零资产沉淀</li>
-      </ul>
+  <div style="border:3px solid #111; box-shadow:7px 7px 0 #111; overflow:hidden; margin-top:48px;">
+    <div style="display:grid; grid-template-columns:1fr 1fr;">
+      <div style="background:#D92B1E; padding:48px; border-right:3px solid #111;">
+        <div class="pain-tag">✕ BEFORE · 传统广告模式</div>
+        <div class="pain-title">强插广告，毫无感知</div>
+        <ul class="pain-list">
+          <li>不分场合，剧情高潮直接打断</li>
+          <li>用户跳过率 67%，品牌无效曝光</li>
+          <li>广告消失即消失，零资产沉淀</li>
+        </ul>
+      </div>
+      <div style="background:#0B38C8; padding:48px;">
+        <div class="pain-tag">✓ AFTER · 此刻在场</div>
+        <div class="pain-title">感知时机，随场景共鸣</div>
+        <ul class="pain-list">
+          <li>AI 判断情绪窗口，高潮期静默不介入</li>
+          <li>缓冲期轻量节点，用户主动表达意愿</li>
+          <li>互动结果沉淀为可保存的数字资产</li>
+        </ul>
+      </div>
     </div>
-    <div class="pain-right">
-      <div class="pain-tag">✓ AFTER · 此刻在场</div>
-      <div class="pain-title">感知时机，随场景共鸣</div>
-      <ul class="pain-list">
-        <li>AI 判断情绪窗口，高潮期静默不介入</li>
-        <li>缓冲期轻量节点，用户主动表达意愿</li>
-        <li>互动结果沉淀为可保存的数字资产</li>
-      </ul>
+    <div style="background:#111; padding:24px 48px; text-align:center; border-top:3px solid #111;">
+      <p style="font-size:16px;font-weight:700;color:#FFE100;margin:0;">广告的关键不只是曝光，而是选择什么时候、以什么方式在场。</p>
     </div>
-  </div>
-  <div class="pain-bar">广告的关键不只是曝光，而是选择什么时候、以什么方式在场。</div>
   </div><!-- SECTION 03: ROUTE MATRIX -->
 <section id="route-matrix">
 <div class="inner">
@@ -528,12 +530,31 @@ section .inner{padding:96px 64px;}
   <div style="display:flex; flex-direction:column; gap:24px; margin-top:32px; align-items:flex-start;">
     <button id="btn-start-emotion" class="btn btn-blue" style="font-size:15px; padding:14px 40px; font-weight:900; box-shadow:5px 5px 0 #111; display:inline-block; width:auto;">▶ 开始体验</button>
 
-    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:12px;">
-      <span style="font-family:'DM Mono',monospace;font-size:11px;color:#777;letter-spacing:1px;white-space:nowrap;">选择模式：</span>
-      <div class="toggle-group" id="ew-toggle">
-        <button id="btn-trad" style="pointer-events:none; opacity:0.4;">传统广告介入</button>
-        <button id="btn-buffer" style="pointer-events:none; opacity:0.4;">AI 缓冲介入</button>
-      </div>
+    <!-- 引导提示（初始隐藏，点击开始体验后出现） -->
+    <div id="mode-guide" style="display:none;
+      background:#FFE100; border:3px solid #111; box-shadow:4px 4px 0 #111;
+      padding:12px 20px; margin-bottom:16px; font-size:14px; font-weight:700; color:#111;">
+      ← 选择一种广告介入方式，开始体验
+    </div>
+
+    <!-- 切换按钮组 -->
+    <div style="display:flex; gap:0; margin-bottom:32px;">
+      <button id="btn-trad" style="
+        background:#fff; color:#777;
+        border:3px solid #CCC; border-right:none;
+        padding:12px 28px; font-size:13px; font-weight:700;
+        cursor:not-allowed; pointer-events:none;
+        font-family:inherit;">
+        传统广告介入
+      </button>
+      <button id="btn-buffer" style="
+        background:#fff; color:#777;
+        border:3px solid #CCC;
+        padding:12px 28px; font-size:13px; font-weight:700;
+        cursor:not-allowed; pointer-events:none;
+        font-family:inherit;">
+        AI 缓冲介入
+      </button>
     </div>
 
     <div class="ew-grid">
@@ -1776,10 +1797,10 @@ function resetPlayer() {
   clearDanmu('danmu-layer');
 }
 
-// ── 传统广告模式 ──
+// ── 传统广告模式（完整重写）──
 // 流程：climax 播4秒 → 暂停 → ad_drink_old 播6秒 → climax 再播4秒 → 结束
 function runTraditionalMode() {
-  var mainV = document.getElementById('main-video');
+  var mainV   = document.getElementById('main-video');
   var adBar   = document.getElementById('ad-interrupt-bar');
   var adLayer = document.getElementById('ad-layer');
   var adV     = document.getElementById('ad-video');
@@ -1787,11 +1808,18 @@ function runTraditionalMode() {
   var epTitle = document.getElementById('ep-title');
   if (!mainV) return;
 
-  // 第1步：播放正片 climax
-  mainV.innerHTML =
-    '<source src="./assets/videos/content_climax_female.mp4" type="video/mp4">' +
-    '<source src="/assets/videos/content_climax_female.mp4" type="video/mp4">';
+  // 清空之前的 source，重新设置
+  while (mainV.firstChild) mainV.removeChild(mainV.firstChild);
+  var s1 = document.createElement('source');
+  s1.src  = './assets/videos/content_climax_female.mp4';
+  s1.type = 'video/mp4';
+  var s2 = document.createElement('source');
+  s2.src  = '/assets/videos/content_climax_female.mp4';
+  s2.type = 'video/mp4';
+  mainV.appendChild(s1);
+  mainV.appendChild(s2);
   mainV.load();
+  mainV.currentTime = 0;
   mainV.play().catch(function(){});
 
   if (epTitle) epTitle.textContent = '假装偶然 · 第12集';
@@ -1800,47 +1828,54 @@ function runTraditionalMode() {
   loopDanmu('climax', 'danmu-layer');
   updateLens('trad');
 
-  // 第2步：4秒后暂停正片，插入广告
-  var step2 = setTimeout(function() {
+  // 4秒后插广告
+  var t1 = setTimeout(function() {
     mainV.pause();
     pauseProgress();
 
     if (adBar)   adBar.style.display = 'flex';
     if (adLayer) adLayer.style.display = 'block';
 
-    // 广告角标
     var adBadge = adLayer ? adLayer.querySelector('.ad-badge') : null;
     if (adBadge) adBadge.textContent = '广告';
 
+    // 清空广告视频 source
     if (adV) {
-      adV.innerHTML =
-        '<source src="./assets/videos/ad_drink_old.mp4" type="video/mp4">' +
-        '<source src="/assets/videos/ad_drink_old.mp4" type="video/mp4">';
+      while (adV.firstChild) adV.removeChild(adV.firstChild);
+      var as1 = document.createElement('source');
+      as1.src  = './assets/videos/ad_drink_old.mp4';
+      as1.type = 'video/mp4';
+      var as2 = document.createElement('source');
+      as2.src  = '/assets/videos/ad_drink_old.mp4';
+      as2.type = 'video/mp4';
+      adV.appendChild(as1);
+      adV.appendChild(as2);
       adV.load();
+      adV.currentTime = 0;
       adV.play().catch(function(){});
     }
 
     if (badge)   { badge.textContent = '⏸ 广告插播中'; badge.style.color = '#FF4444'; }
     if (epTitle) epTitle.textContent = '广告时间';
 
-    // 更换为愤怒弹幕
     clearInterval(danmuInterval);
     spawnDanmu('trad', 'danmu-layer');
     danmuInterval = setInterval(function(){
       spawnDanmu('trad', 'danmu-layer');
     }, 10000);
 
-    // 更新倒计时显示（6秒）
-    var countEl = document.getElementById('ad-countdown');
+    // 倒计时6秒
     var c = 6;
+    var countEl = document.getElementById('ad-countdown');
     if (countEl) countEl.textContent = c;
+    clearInterval(adTimerInterval);
     adTimerInterval = setInterval(function() {
       c--;
       if (countEl) countEl.textContent = c;
       if (c <= 0) {
         clearInterval(adTimerInterval);
 
-        // 第3步：6秒广告结束，恢复正片
+        // 广告结束，恢复正片
         if (adBar)   adBar.style.display = 'none';
         if (adLayer) adLayer.style.display = 'none';
         if (adV)     { adV.pause(); adV.currentTime = 0; }
@@ -1854,19 +1889,18 @@ function runTraditionalMode() {
         clearInterval(danmuInterval);
         loopDanmu('climax', 'danmu-layer');
 
-        // 第4步：4秒后正片结束，停止
+        // 再播4秒后停止
         setTimeout(function() {
           mainV.pause();
           pauseProgress();
-          if (badge) { badge.textContent = '播放结束'; badge.style.color = '#777'; }
+          if (badge) { badge.textContent = '播放完毕'; badge.style.color = '#555'; }
         }, 4000);
       }
     }, 1000);
-
   }, 4000);
 }
 
-// ── AI 缓冲介入模式 ──
+// ── AI 缓冲介入模式（完整重写）──
 // 流程：buffer 播4秒 → 暂停 → ad_drink_scene_02 播完 → buffer 恢复
 function runBufferMode() {
   var mainV   = document.getElementById('main-video');
@@ -1877,11 +1911,18 @@ function runBufferMode() {
   var epTitle = document.getElementById('ep-title');
   if (!mainV) return;
 
-  // 第1步：播放缓冲正片
-  mainV.innerHTML =
-    '<source src="./assets/videos/content_buffer_female.mp4" type="video/mp4">' +
-    '<source src="/assets/videos/content_buffer_female.mp4" type="video/mp4">';
+  // 清空并设置 buffer 视频
+  while (mainV.firstChild) mainV.removeChild(mainV.firstChild);
+  var s1 = document.createElement('source');
+  s1.src  = './assets/videos/content_buffer_female.mp4';
+  s1.type = 'video/mp4';
+  var s2 = document.createElement('source');
+  s2.src  = '/assets/videos/content_buffer_female.mp4';
+  s2.type = 'video/mp4';
+  mainV.appendChild(s1);
+  mainV.appendChild(s2);
   mainV.load();
+  mainV.currentTime = 0;
   mainV.play().catch(function(){});
 
   if (epTitle) epTitle.textContent = '假装偶然 · 第12集';
@@ -1890,7 +1931,7 @@ function runBufferMode() {
   loopDanmu('buffer', 'danmu-layer');
   updateLens('buffer');
 
-  // 第2步：4秒后暂停正片，插入场景广告
+  // 4秒后切广告
   setTimeout(function() {
     mainV.pause();
     pauseProgress();
@@ -1898,26 +1939,33 @@ function runBufferMode() {
     if (adBar)   adBar.style.display = 'flex';
     if (adLayer) adLayer.style.display = 'block';
 
-    // 广告角标
     var adBadge = adLayer ? adLayer.querySelector('.ad-badge') : null;
     if (adBadge) adBadge.textContent = 'AI 场景匹配广告';
 
-    // 倒计时条文字
     var countEl = document.getElementById('ad-countdown');
-    if (countEl) countEl.textContent = '...';
+    if (countEl) countEl.textContent = '播放中';
 
     if (adV) {
-      adV.innerHTML =
-        '<source src="./assets/videos/ad_drink_scene_02.mp4" type="video/mp4">' +
-        '<source src="/assets/videos/ad_drink_scene_02.mp4" type="video/mp4">';
+      // 移除旧的 ended 监听
+      adV.onended = null;
+
+      while (adV.firstChild) adV.removeChild(adV.firstChild);
+      var as1 = document.createElement('source');
+      as1.src  = './assets/videos/ad_drink_scene_02.mp4';
+      as1.type = 'video/mp4';
+      var as2 = document.createElement('source');
+      as2.src  = '/assets/videos/ad_drink_scene_02.mp4';
+      as2.type = 'video/mp4';
+      adV.appendChild(as1);
+      adV.appendChild(as2);
       adV.load();
+      adV.currentTime = 0;
       adV.play().catch(function(){});
 
-      // 监听广告播完（ended 事件）
+      // 广告播完后接正片
       adV.onended = function() {
         adV.onended = null;
 
-        // 第3步：广告播完，恢复 buffer 正片
         if (adBar)   adBar.style.display = 'none';
         if (adLayer) adLayer.style.display = 'none';
         adV.currentTime = 0;
@@ -2441,27 +2489,122 @@ window.addEventListener('load', function() {
   initSmoothScroll();
   initUpload();
 
-  // ── 情绪判断切换按钮初始灰掉 ──
-  var btnTrad = document.getElementById('btn-trad');
-  var btnBuf  = document.getElementById('btn-buffer');
-  if (btnTrad) { btnTrad.style.pointerEvents='none'; btnTrad.style.opacity='0.35'; }
-  if (btnBuf)  { btnBuf.style.pointerEvents='none';  btnBuf.style.opacity='0.35'; }
+  // ── 情绪判断初始状态：切换按钮灰掉不可点 ──
+  var btnTrad   = document.getElementById('btn-trad');
+  var btnBuffer = document.getElementById('btn-buffer');
+  var modeGuide = document.getElementById('mode-guide');
 
-  // ── 情绪判断切换按钮点击 ──
-  if (btnTrad) btnTrad.onclick = function() { switchMode('trad'); };
-  if (btnBuf)  btnBuf.onclick  = function() { switchMode('buffer'); };
+  function greyBtns() {
+    if (btnTrad) {
+      btnTrad.style.background    = '#fff';
+      btnTrad.style.color         = '#aaa';
+      btnTrad.style.border        = '3px solid #CCC';
+      btnTrad.style.borderRight   = 'none';
+      btnTrad.style.cursor        = 'not-allowed';
+      btnTrad.style.pointerEvents = 'none';
+    }
+    if (btnBuffer) {
+      btnBuffer.style.background    = '#fff';
+      btnBuffer.style.color         = '#aaa';
+      btnBuffer.style.border        = '3px solid #CCC';
+      btnBuffer.style.cursor        = 'not-allowed';
+      btnBuffer.style.pointerEvents = 'none';
+    }
+  }
 
-  // ── 情绪判断「开始体验」──
+  function activateBtns() {
+    // 显示引导提示
+    if (modeGuide) modeGuide.style.display = 'block';
+
+    // 传统广告按钮激活
+    if (btnTrad) {
+      btnTrad.style.background    = '#D92B1E';
+      btnTrad.style.color         = '#fff';
+      btnTrad.style.border        = '3px solid #111';
+      btnTrad.style.borderRight   = 'none';
+      btnTrad.style.cursor        = 'pointer';
+      btnTrad.style.pointerEvents = 'auto';
+      btnTrad.style.boxShadow     = '';
+    }
+
+    // AI缓冲按钮激活
+    if (btnBuffer) {
+      btnBuffer.style.background    = '#fff';
+      btnBuffer.style.color         = '#111';
+      btnBuffer.style.border        = '3px solid #111';
+      btnBuffer.style.cursor        = 'pointer';
+      btnBuffer.style.pointerEvents = 'auto';
+    }
+  }
+
+  function setActiveBtn(mode) {
+    if (mode === 'trad') {
+      if (btnTrad) {
+        btnTrad.style.background  = '#D92B1E';
+        btnTrad.style.color       = '#fff';
+        btnTrad.style.boxShadow   = 'none';
+        btnTrad.style.transform   = 'translate(3px,3px)';
+      }
+      if (btnBuffer) {
+        btnBuffer.style.background = '#fff';
+        btnBuffer.style.color      = '#111';
+        btnBuffer.style.boxShadow  = '';
+        btnBuffer.style.transform  = '';
+      }
+    } else {
+      if (btnBuffer) {
+        btnBuffer.style.background = '#111';
+        btnBuffer.style.color      = '#FFE100';
+        btnBuffer.style.boxShadow  = 'none';
+        btnBuffer.style.transform  = 'translate(3px,3px)';
+      }
+      if (btnTrad) {
+        btnTrad.style.background   = '#D92B1E';
+        btnTrad.style.color        = '#fff';
+        btnTrad.style.boxShadow    = '';
+        btnTrad.style.transform    = '';
+      }
+    }
+    // 引导提示隐藏
+    if (modeGuide) modeGuide.style.display = 'none';
+  }
+
+  // 初始化灰掉
+  greyBtns();
+
+  // 「开始体验」按钮绑定
   var btnE = document.getElementById('btn-start-emotion');
   if (btnE) {
     btnE.onclick = function() {
-      if (btnTrad) { btnTrad.style.pointerEvents='auto'; btnTrad.style.opacity='1'; }
-      if (btnBuf)  { btnBuf.style.pointerEvents='auto';  btnBuf.style.opacity='1'; }
-      switchMode('buffer');
+      // 激活两个切换按钮
+      activateBtns();
+      // 绑定切换按钮点击
+      if (btnTrad) {
+        btnTrad.onclick = function() {
+          setActiveBtn('trad');
+          resetPlayer();
+          runTraditionalMode();
+        };
+      }
+      if (btnBuffer) {
+        btnBuffer.onclick = function() {
+          setActiveBtn('buffer');
+          resetPlayer();
+          runBufferMode();
+        };
+      }
+      // 按钮变为「重新体验」
       btnE.textContent = '↺ 重新体验';
       btnE.onclick = function() {
         resetPlayer();
-        switchMode('buffer');
+        greyBtns();
+        if (modeGuide) modeGuide.style.display = 'none';
+        // 重置切换按钮点击事件
+        if (btnTrad)   btnTrad.onclick   = null;
+        if (btnBuffer) btnBuffer.onclick = null;
+        // 重新绑定「开始体验」逻辑
+        btnE.textContent = '▶ 开始体验';
+        btnE.onclick = arguments.callee;
       };
     };
   }
