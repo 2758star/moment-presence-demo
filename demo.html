@@ -1721,6 +1721,28 @@ function updateLens(mode){
 }
 
 function switchMode(mode){
+  // 重置播放器状态
+  const mainV = document.getElementById('main-video');
+  const adV   = document.getElementById('ad-video');
+  const adBar = document.getElementById('ad-interrupt-bar');
+  const adLayer = document.getElementById('ad-layer');
+  const progressFill = document.getElementById('progress-bar-fill');
+
+  if (mainV)  { mainV.pause(); mainV.currentTime = 0; }
+  if (adV)    { adV.pause();   adV.currentTime = 0; }
+  if (adBar)  { adBar.style.display = 'none'; }
+  if (adLayer){ adLayer.style.display = 'none'; }
+  if (progressFill){ progressFill.style.width = '0%'; }
+
+  // 清除所有定时器
+  if (window._adTimer)      { clearInterval(window._adTimer);      window._adTimer = null; }
+  if (window._danmuTimer)   { clearInterval(window._danmuTimer);   window._danmuTimer = null; }
+  if (window._progressTimer){ clearInterval(window._progressTimer); window._progressTimer = null; }
+
+  // 清除弹幕
+  const danmuLayer = document.getElementById('danmu-layer');
+  if (danmuLayer) danmuLayer.innerHTML = '';
+
   currentMode = mode;
   // Update buttons
   document.querySelectorAll('#ew-toggle button').forEach(b => b.classList.remove('active'));
@@ -1923,7 +1945,6 @@ if (btnStartEmotion) {
     btnStartEmotion.textContent = '↺ 重新体验';
     btnStartEmotion.removeEventListener('click', onStartEmotion);
     btnStartEmotion.addEventListener('click', function() {
-      resetPlayer();
       switchMode('buffer');
     });
   });
