@@ -525,8 +525,8 @@ section .inner{padding:96px 64px;}
   <h2 class="sec-title">情绪窗口判断</h2>
   <p class="sec-desc">AI 的价值不只是更会投广告，也包括知道什么时候不投广告。</p>
 
-  <div style="display:flex; flex-direction:column; gap:24px; margin-top:32px;">
-    <button id="btn-start-emotion" class="btn btn-blue" style="font-size:15px; padding:14px 40px; font-weight:900; box-shadow:5px 5px 0 #111; display:inline-flex; align-items:center; gap:8px;">▶ 开始体验</button>
+  <div style="display:flex; flex-direction:column; gap:24px; margin-top:32px; align-items:flex-start;">
+    <button id="btn-start-emotion" class="btn btn-blue" style="font-size:15px; padding:14px 40px; font-weight:900; box-shadow:5px 5px 0 #111; display:inline-block; width:auto;">▶ 开始体验</button>
 
     <div style="display:flex;align-items:center;flex-wrap:wrap;gap:12px;">
       <span style="font-family:'DM Mono',monospace;font-size:11px;color:#777;letter-spacing:1px;white-space:nowrap;">选择模式：</span>
@@ -599,8 +599,8 @@ section .inner{padding:96px 64px;}
   <h2 class="sec-title">情绪拍立得 · 主流程</h2>
   <p class="sec-desc">播放器正片播放 → 情绪引导 → 选择表达 → 生成情绪拍立得。</p>
 
-  <div style="display:flex; flex-direction:column; gap:20px; margin-top:32px;">
-    <button id="btn-start-polaroid" class="btn btn-blue" style="font-size:15px; padding:14px 40px; font-weight:900; box-shadow:5px 5px 0 #111; display:inline-flex; align-items:center; gap:8px;">▶ 开始体验</button>
+  <div style="display:flex; flex-direction:column; gap:20px; margin-top:32px; align-items:flex-start;">
+    <button id="btn-start-polaroid" class="btn btn-blue" style="font-size:15px; padding:14px 40px; font-weight:900; box-shadow:5px 5px 0 #111; display:inline-block; width:auto;">▶ 开始体验</button>
     <p style="font-size:12px; color:#777; font-family:'DM Mono',monospace;">点击后播放正片，等待情绪节点出现</p>
 
     <div class="ep-grid">
@@ -680,7 +680,7 @@ section .inner{padding:96px 64px;}
 
           <div style="display:flex;gap:12px;flex-wrap:wrap;">
             <button id="btn-open-camera" class="btn btn-blue" style="font-size:14px;padding:12px 32px;font-weight:900;" onclick="showDhPhaseB('camera')">拍一张 📷</button>
-            <button id="btn-upload-photo" class="btn" style="font-size:14px;padding:12px 24px;font-weight:700;" onclick="showDhPhaseB('upload')">上传照片 🖼</button>
+            <button id="btn-upload-photo" class="btn" style="font-size:14px;padding:12px 24px;font-weight:700;opacity:0.35;cursor:not-allowed;pointer-events:none;">上传照片 🖼</button>
             <button class="btn" style="font-size:14px;padding:12px 20px;color:#777;" onclick="resetEmojiFlow()">再想想</button>
           </div>
         </div>
@@ -815,7 +815,7 @@ section .inner{padding:96px 64px;}
     AI 判断：比赛进入自然缓冲窗口，允许参与型广告节点介入。
   </div>
 
-  <button id="btn-start-sports" class="btn btn-blue" style="font-size:15px; padding:14px 40px; font-weight:900; box-shadow:5px 5px 0 #111; margin-bottom:24px; display:inline-flex; align-items:center; gap:8px;">▶ 开始体验</button>
+  <button id="btn-start-sports" class="btn btn-blue" style="font-size:15px; padding:14px 40px; font-weight:900; box-shadow:5px 5px 0 #111; margin-bottom:24px; display:inline-block; width:auto;">▶ 开始体验</button>
 
   <div class="sg-grid">
     <!-- Left: Sports Player -->
@@ -1776,144 +1776,172 @@ function resetPlayer() {
   clearDanmu('danmu-layer');
 }
 
-// ================================================================
-// 情绪判断模块：传统广告模式
-// ================================================================
+// ── 传统广告模式 ──
+// 流程：climax 播4秒 → 暂停 → ad_drink_old 播6秒 → climax 再播4秒 → 结束
 function runTraditionalMode() {
   var mainV = document.getElementById('main-video');
+  var adBar   = document.getElementById('ad-interrupt-bar');
+  var adLayer = document.getElementById('ad-layer');
+  var adV     = document.getElementById('ad-video');
+  var badge   = document.getElementById('video-badge');
+  var epTitle = document.getElementById('ep-title');
   if (!mainV) return;
 
-  // 设置视频源
-  mainV.innerHTML = '<source src="./assets/videos/content_climax_female.mp4" type="video/mp4">' +
-                    '<source src="/assets/videos/content_climax_female.mp4" type="video/mp4">';
+  // 第1步：播放正片 climax
+  mainV.innerHTML =
+    '<source src="./assets/videos/content_climax_female.mp4" type="video/mp4">' +
+    '<source src="/assets/videos/content_climax_female.mp4" type="video/mp4">';
   mainV.load();
   mainV.play().catch(function(){});
 
-  var epTitle = document.getElementById('ep-title');
-  var badge   = document.getElementById('video-badge');
   if (epTitle) epTitle.textContent = '假装偶然 · 第12集';
-  if (badge)   { badge.textContent = '⚠ 传统模式 · 广告即将强插'; badge.style.color = '#FFE100'; }
-
+  if (badge)   { badge.textContent = '正片播放中'; badge.style.color = '#fff'; }
   startProgress(0.6);
   loopDanmu('climax', 'danmu-layer');
   updateLens('trad');
 
-  // 5秒后插广告
-  setTimeout(function() {
+  // 第2步：4秒后暂停正片，插入广告
+  var step2 = setTimeout(function() {
     mainV.pause();
     pauseProgress();
 
-    var adBar = document.getElementById('ad-interrupt-bar');
-    var adLayer = document.getElementById('ad-layer');
-    var adV = document.getElementById('ad-video');
-
-    if (adBar)   adBar.style.display   = 'flex';
+    if (adBar)   adBar.style.display = 'flex';
     if (adLayer) adLayer.style.display = 'block';
 
+    // 广告角标
+    var adBadge = adLayer ? adLayer.querySelector('.ad-badge') : null;
+    if (adBadge) adBadge.textContent = '广告';
+
     if (adV) {
-      adV.innerHTML = '<source src="./assets/videos/ad_drink_old.mp4" type="video/mp4">' +
-                      '<source src="/assets/videos/ad_drink_old.mp4" type="video/mp4">';
+      adV.innerHTML =
+        '<source src="./assets/videos/ad_drink_old.mp4" type="video/mp4">' +
+        '<source src="/assets/videos/ad_drink_old.mp4" type="video/mp4">';
       adV.load();
       adV.play().catch(function(){});
     }
 
-    if (badge) { badge.textContent = '⏸ 广告强插中 · 正片已暂停'; badge.style.color = '#FF4444'; }
+    if (badge)   { badge.textContent = '⏸ 广告插播中'; badge.style.color = '#FF4444'; }
     if (epTitle) epTitle.textContent = '广告时间';
 
-    // 重置广告角标为默认"广告"
-    var adBadgeTrad = document.querySelector('#ad-layer .ad-badge');
-    if (adBadgeTrad) adBadgeTrad.textContent = '广告';
-
+    // 更换为愤怒弹幕
     clearInterval(danmuInterval);
     spawnDanmu('trad', 'danmu-layer');
-    danmuInterval = setInterval(function(){ spawnDanmu('trad','danmu-layer'); }, 12000);
+    danmuInterval = setInterval(function(){
+      spawnDanmu('trad', 'danmu-layer');
+    }, 10000);
 
-    startCountdown(15, function() {
-      if (adBar)   adBar.style.display   = 'none';
-      if (adLayer) adLayer.style.display = 'none';
-      if (adV)     adV.pause();
+    // 更新倒计时显示（6秒）
+    var countEl = document.getElementById('ad-countdown');
+    var c = 6;
+    if (countEl) countEl.textContent = c;
+    adTimerInterval = setInterval(function() {
+      c--;
+      if (countEl) countEl.textContent = c;
+      if (c <= 0) {
+        clearInterval(adTimerInterval);
 
-      mainV.play().catch(function(){});
-      startProgress(0.4);
+        // 第3步：6秒广告结束，恢复正片
+        if (adBar)   adBar.style.display = 'none';
+        if (adLayer) adLayer.style.display = 'none';
+        if (adV)     { adV.pause(); adV.currentTime = 0; }
 
-      if (badge)   { badge.textContent = '正片恢复 · 用户体验已被打断'; badge.style.color = '#aaa'; }
-      if (epTitle) epTitle.textContent = '假装偶然 · 第12集';
+        mainV.play().catch(function(){});
+        startProgress(0.4);
 
-      clearInterval(danmuInterval);
-      loopDanmu('climax', 'danmu-layer');
-    });
+        if (badge)   { badge.textContent = '正片恢复'; badge.style.color = '#aaa'; }
+        if (epTitle) epTitle.textContent = '假装偶然 · 第12集';
 
-  }, 5000);
+        clearInterval(danmuInterval);
+        loopDanmu('climax', 'danmu-layer');
+
+        // 第4步：4秒后正片结束，停止
+        setTimeout(function() {
+          mainV.pause();
+          pauseProgress();
+          if (badge) { badge.textContent = '播放结束'; badge.style.color = '#777'; }
+        }, 4000);
+      }
+    }, 1000);
+
+  }, 4000);
 }
 
-// ================================================================
-// 情绪判断模块：AI缓冲模式
-// ================================================================
+// ── AI 缓冲介入模式 ──
+// 流程：buffer 播4秒 → 暂停 → ad_drink_scene_02 播完 → buffer 恢复
 function runBufferMode() {
-  var mainV = document.getElementById('main-video');
+  var mainV   = document.getElementById('main-video');
+  var adBar   = document.getElementById('ad-interrupt-bar');
+  var adLayer = document.getElementById('ad-layer');
+  var adV     = document.getElementById('ad-video');
+  var badge   = document.getElementById('video-badge');
+  var epTitle = document.getElementById('ep-title');
   if (!mainV) return;
 
-  mainV.innerHTML = '<source src="./assets/videos/content_buffer_female.mp4" type="video/mp4">' +
-                    '<source src="/assets/videos/content_buffer_female.mp4" type="video/mp4">';
+  // 第1步：播放缓冲正片
+  mainV.innerHTML =
+    '<source src="./assets/videos/content_buffer_female.mp4" type="video/mp4">' +
+    '<source src="/assets/videos/content_buffer_female.mp4" type="video/mp4">';
   mainV.load();
   mainV.play().catch(function(){});
 
-  var epTitle = document.getElementById('ep-title');
-  var badge   = document.getElementById('video-badge');
   if (epTitle) epTitle.textContent = '假装偶然 · 第12集';
-  if (badge)   { badge.textContent = '✓ AI判断：缓冲窗口 · 准备介入'; badge.style.color = '#FFE100'; }
-
+  if (badge)   { badge.textContent = '✓ AI判断：缓冲窗口'; badge.style.color = '#FFE100'; }
   startProgress(0.4);
   loopDanmu('buffer', 'danmu-layer');
   updateLens('buffer');
 
-  // 4秒后切广告
+  // 第2步：4秒后暂停正片，插入场景广告
   setTimeout(function() {
     mainV.pause();
     pauseProgress();
 
-    var adBar   = document.getElementById('ad-interrupt-bar');
-    var adLayer = document.getElementById('ad-layer');
-    var adV     = document.getElementById('ad-video');
-    var adCountEl = document.getElementById('ad-countdown');
-
-    if (adBar)   adBar.style.display   = 'flex';
+    if (adBar)   adBar.style.display = 'flex';
     if (adLayer) adLayer.style.display = 'block';
 
-    // 改为场景版广告
+    // 广告角标
+    var adBadge = adLayer ? adLayer.querySelector('.ad-badge') : null;
+    if (adBadge) adBadge.textContent = 'AI 场景匹配广告';
+
+    // 倒计时条文字
+    var countEl = document.getElementById('ad-countdown');
+    if (countEl) countEl.textContent = '...';
+
     if (adV) {
-      adV.innerHTML = '<source src="./assets/videos/ad_drink_scene_01.mp4" type="video/mp4">' +
-                      '<source src="/assets/videos/ad_drink_scene_01.mp4" type="video/mp4">';
+      adV.innerHTML =
+        '<source src="./assets/videos/ad_drink_scene_02.mp4" type="video/mp4">' +
+        '<source src="/assets/videos/ad_drink_scene_02.mp4" type="video/mp4">';
       adV.load();
       adV.play().catch(function(){});
-    }
 
-    // 广告角标改文字
-    var adBadge = document.querySelector('#ad-layer .ad-badge');
-    if (adBadge) adBadge.textContent = 'AI 场景匹配广告';
+      // 监听广告播完（ended 事件）
+      adV.onended = function() {
+        adV.onended = null;
+
+        // 第3步：广告播完，恢复 buffer 正片
+        if (adBar)   adBar.style.display = 'none';
+        if (adLayer) adLayer.style.display = 'none';
+        adV.currentTime = 0;
+
+        mainV.play().catch(function(){});
+        startProgress(0.3);
+
+        if (badge)   { badge.textContent = '正片恢复 · AI缓冲广告完成'; badge.style.color = '#aaa'; }
+        if (epTitle) epTitle.textContent = '假装偶然 · 第12集';
+
+        clearInterval(danmuInterval);
+        loopDanmu('buffer', 'danmu-layer');
+        updateLens('buffer_result');
+      };
+    }
 
     if (badge)   { badge.textContent = '✓ AI缓冲介入 · 场景匹配广告'; badge.style.color = '#00FF88'; }
     if (epTitle) epTitle.textContent = '场景匹配广告';
 
     clearInterval(danmuInterval);
     spawnDanmu('buffer_ad', 'danmu-layer');
-    danmuInterval = setInterval(function(){ spawnDanmu('buffer_ad','danmu-layer'); }, 12000);
-
-    startCountdown(8, function() {
-      if (adBar)   adBar.style.display   = 'none';
-      if (adLayer) adLayer.style.display = 'none';
-      if (adV)     adV.pause();
-
-      mainV.play().catch(function(){});
-      startProgress(0.3);
-
-      if (badge)   { badge.textContent = '正片恢复 · AI场景广告已完成'; badge.style.color = '#aaa'; }
-      if (epTitle) epTitle.textContent = '假装偶然 · 第12集';
-
-      clearInterval(danmuInterval);
-      loopDanmu('climax', 'danmu-layer');
-      updateLens('buffer_result');
-    });
+    danmuInterval = setInterval(function(){
+      spawnDanmu('buffer_ad', 'danmu-layer');
+    }, 12000);
 
   }, 4000);
 }
@@ -2498,7 +2526,8 @@ window.addEventListener('load', function() {
   var btnUpload = document.getElementById('btn-upload-photo');
   var btnRethink = document.getElementById('btn-rethink');
   if (btnCamera)  btnCamera.onclick  = function() { showDhPhaseB('camera'); };
-  if (btnUpload)  btnUpload.onclick  = function() { showDhPhaseB('upload'); };
+  // 上传照片暂不开放，已灰掉
+  // if (btnUpload) btnUpload.onclick = function() { showDhPhaseB('upload'); };
   if (btnRethink) btnRethink.onclick = function() { resetEmojiFlow(); };
 
   // ── 数字人阶段B：使用示例场景 ──
