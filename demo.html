@@ -2048,5 +2048,102 @@ document.querySelectorAll('video').forEach(v => {
 })();
 
 </script>
+<script>
+// 强制绑定开始体验按钮（放在最后确保覆盖一切）
+window.addEventListener('load', function() {
+
+  // ── 情绪判断 ──
+  var btnE = document.getElementById('btn-start-emotion');
+  if (btnE) {
+    btnE.onclick = null; // 先清除
+    btnE.onclick = function() {
+      console.log('情绪判断按钮被点击');
+      var btnTrad = document.getElementById('btn-trad');
+      var btnBuf  = document.getElementById('btn-buffer');
+      if (btnTrad) { btnTrad.style.pointerEvents='auto'; btnTrad.style.opacity='1'; }
+      if (btnBuf)  { btnBuf.style.pointerEvents='auto';  btnBuf.style.opacity='1'; }
+      if (typeof switchMode === 'function') {
+        switchMode('buffer');
+      } else {
+        console.error('switchMode 不存在');
+      }
+      this.textContent = '↺ 重新体验';
+      this.onclick = function() {
+        if (typeof resetPlayer === 'function') resetPlayer();
+        if (typeof switchMode  === 'function') switchMode('buffer');
+      };
+    };
+    console.log('情绪判断按钮绑定完成，onclick类型:', typeof btnE.onclick);
+  } else {
+    console.error('btn-start-emotion 不存在');
+  }
+
+  // ── 情绪拍立得 ──
+  var btnP = document.getElementById('btn-start-polaroid');
+  if (btnP) {
+    btnP.onclick = null;
+    btnP.onclick = function() {
+      console.log('拍立得按钮被点击');
+      if (typeof showPanel_EP === 'function') showPanel_EP('player');
+      if (typeof setStep_EP   === 'function') setStep_EP(1);
+      var idolV = document.getElementById('idol-video');
+      if (idolV) { idolV.load(); idolV.play().catch(function(){}); }
+      setTimeout(function() {
+        var f = document.getElementById('idol-emotion-float');
+        if (f) f.style.display = 'block';
+        if (typeof setStep_EP === 'function') setStep_EP(2);
+      }, 5000);
+      this.textContent = '↺ 再体验一次';
+      this.onclick = function() {
+        if (typeof resetEmojiFlow === 'function') resetEmojiFlow();
+        else location.reload();
+      };
+    };
+    console.log('拍立得按钮绑定完成，onclick类型:', typeof btnP.onclick);
+  }
+
+  // ── 体育竞猜 ──
+  var btnS = document.getElementById('btn-start-sports');
+  if (btnS) {
+    btnS.onclick = null;
+    btnS.onclick = function() {
+      console.log('体育按钮被点击');
+      var sv = document.getElementById('sports-video');
+      if (sv) { sv.load(); sv.play().catch(function(){}); }
+      var watchTip = document.getElementById('sports-watch-tip');
+      var tipEl    = document.getElementById('guess-unlock-tip');
+      if (watchTip) watchTip.style.display = 'flex';
+      var t = 5;
+      if (tipEl) tipEl.textContent = '竞猜将在 ' + t + ' 秒后开启…';
+      var timer = setInterval(function() {
+        t--;
+        if (tipEl) tipEl.textContent = '竞猜将在 ' + t + ' 秒后开启…';
+        if (t <= 0) {
+          clearInterval(timer);
+          if (watchTip) watchTip.style.display = 'none';
+          var gp = document.getElementById('guess-phase-1');
+          if (gp) {
+            gp.style.display = 'block';
+            gp.style.opacity = '0';
+            gp.style.transition = 'opacity 0.5s';
+            setTimeout(function(){ gp.style.opacity = '1'; }, 50);
+          }
+        }
+      }, 1000);
+      this.textContent = '↺ 重新体验';
+      this.onclick = function() { location.reload(); };
+    };
+    console.log('体育按钮绑定完成，onclick类型:', typeof btnS.onclick);
+  }
+
+  // ── 情绪判断切换按钮初始灰掉 ──
+  var btnTrad = document.getElementById('btn-trad');
+  var btnBuf  = document.getElementById('btn-buffer');
+  if (btnTrad) { btnTrad.style.pointerEvents='none'; btnTrad.style.opacity='0.35'; }
+  if (btnBuf)  { btnBuf.style.pointerEvents='none';  btnBuf.style.opacity='0.35'; }
+
+  console.log('所有按钮绑定完成');
+});
+</script>
 </body>
 </html>
