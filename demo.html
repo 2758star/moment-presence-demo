@@ -433,7 +433,8 @@ section .inner{padding:96px 64px;}
     <a href="#emotion-polaroid">情绪拍立得</a>
     <a href="#sports-guess">中场竞猜</a>
     <a href="#scene-rebuild">AI 场景改造</a>
-    <a href="#asset-library">AI 数字资产库</a>
+    <a href="#asset-library">04 数字资产库</a>
+    <a href="#business-value">05 商业价值</a>
   </div>
   <div class="nav-tag">DEMO · 腾讯视频 AI</div>
 </nav>
@@ -994,253 +995,564 @@ section .inner{padding:96px 64px;}
 </div>
 </section>
 
+
 <!-- SECTION 05: ASSET LIBRARY -->
-<section id="asset-library">
-<div class="inner">
-  <p class="func-tag">FUNC 04</p>
-  <h2 class="sec-title">AI 数字资产库</h2>
-  <p class="sec-desc">每一次互动，都沉淀为用户可保存、可展示、可分享的内容资产。</p>
-  <div class="asset-wall">
-    <!-- Card 1 -->
-    <div class="asset-card">
-      <div class="as-type">剧集资产</div>
-      <div class="as-title">本集情绪卡</div>
-      <span class="as-status gen">已生成</span>
-      <span class="as-tag">留存表达型</span>
-      <div class="as-preview">
-        <svg viewBox="0 0 40 40"><path d="M20 8c-2 0-4 2-4 4v0c-4 0-8 2-8 6v12c0 2 2 3 4 3h16c2 0 4-1 4-3V18c0-4-4-6-8-6v0c0-2-2-4-4-4z" fill="none" stroke="#CCC" stroke-width="1.5"/><path d="M12 22c2 2 4 3 5 0 1-3 2 1 3 0 1-1 3-1 5 2" fill="none" stroke="#CCC" stroke-width="1.2"/></svg>
-        <span class="as-ph-label">UI 预览</span>
+<section id="asset-library" style="background-color:#F2F2EF;
+  background-image:radial-gradient(circle,#C4C4BC 1px,transparent 1px);
+  background-size:20px 20px;">
+<div style="max-width:1280px;margin:0 auto;padding:96px 64px;">
+
+  <p style="font-family:'DM Mono',monospace;font-size:12px;color:#0B38C8;
+             letter-spacing:3px;margin-bottom:12px;">FUNC 04</p>
+  <h2 style="font-size:clamp(40px,5vw,72px);font-weight:900;line-height:1;
+              margin-bottom:16px;">AI 数字资产库</h2>
+  <p style="font-size:16px;color:#777;margin-bottom:64px;">
+    每一次互动，都沉淀为用户可保存、可展示、可分享的内容资产。</p>
+
+  <!-- 分区1：剧集·综艺 -->
+  <div style="border:3px solid #111;box-shadow:5px 5px 0 #111;
+              display:flex;align-items:center;gap:14px;
+              padding:14px 20px;background:#111;margin-bottom:0;">
+    <div style="width:8px;height:28px;background:#D92B1E;flex-shrink:0;"></div>
+    <span style="font-size:15px;font-weight:900;color:#fff;">剧集 · 综艺</span>
+    <span style="font-family:'DM Mono',monospace;font-size:10px;
+                 color:rgba(255,255,255,0.4);letter-spacing:2px;margin-left:auto;">
+      DRAMA · VARIETY</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+              border:3px solid #111;border-top:none;margin-bottom:48px;">
+
+    <!-- 卡1：本集情绪卡 -->
+    <div style="padding:20px;border-right:3px solid #111;background:#fff;
+                display:flex;flex-direction:column;">
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#777;
+                letter-spacing:1px;margin-bottom:6px;">剧集资产</p>
+      <h3 style="font-size:16px;font-weight:900;margin-bottom:6px;">本集情绪卡</h3>
+      <span style="display:inline-block;background:#111;color:#FFE100;
+                   font-family:'DM Mono',monospace;font-size:10px;
+                   padding:2px 10px;font-weight:700;margin-bottom:10px;">已生成 ✓</span>
+      <p style="font-size:12px;color:#D92B1E;margin-bottom:16px;">留存表达型</p>
+      <div style="background:#F2F2EF;border:2px solid #111;padding:14px;flex:1;">
+        <p style="font-family:'DM Mono',monospace;font-size:10px;color:#999;
+                  margin-bottom:6px;">AI 生成结果</p>
+        <p style="font-size:13px;font-weight:700;line-height:1.8;color:#111;">
+          "这一刻，好像真的值得被留下来。"</p>
+        <p style="font-family:'DM Mono',monospace;font-size:10px;color:#AAA;
+                  text-align:right;margin-top:8px;">MOMERA × 此刻在场</p>
       </div>
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#AAA;
+                margin-top:12px;">第12集 · 阳台烟火 · 2026.04.28</p>
     </div>
-    <!-- Card 2 - Featured -->
-    <div class="asset-card">
-      <div class="as-type">粉丝 / IP 资产</div>
-      <div class="as-title">陪伴拍立得</div>
-      <span class="as-status rare">稀有资产</span>
-      <span class="as-tag">和TA同框一下</span>
-      <div class="as-preview">
-        <img src="./assets/images/polaroid_result_fireworks.png" alt="陪伴拍立得" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:24px;">✨ 陪伴拍立得</div>
+
+    <!-- 卡2：追剧成就卡 -->
+    <div style="padding:20px;border-right:3px solid #111;background:#fff;
+                display:flex;flex-direction:column;">
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#777;
+                letter-spacing:1px;margin-bottom:6px;">成长资产</p>
+      <h3 style="font-size:16px;font-weight:900;margin-bottom:6px;">追剧成就卡</h3>
+      <span style="display:inline-block;background:#E8E8E5;color:#999;
+                   font-family:'DM Mono',monospace;font-size:10px;
+                   padding:2px 10px;font-weight:700;margin-bottom:10px;">待解锁</span>
+      <p style="font-size:12px;color:#999;margin-bottom:16px;">连续追剧 7 天</p>
+      <div style="text-align:center;padding:20px;background:#F2F2EF;
+                  border:2px solid #111;flex:1;display:flex;
+                  flex-direction:column;align-items:center;justify-content:center;">
+        <span style="font-size:36px;display:block;margin-bottom:8px;">🔒</span>
+        <div style="height:6px;background:#EEE;border:1.5px solid #111;
+                    width:100%;margin:8px 0;">
+          <div style="width:71%;height:100%;background:#0B38C8;"></div>
+        </div>
+        <p style="font-family:'DM Mono',monospace;font-size:11px;color:#777;">
+          5 / 7 天</p>
       </div>
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#AAA;
+                margin-top:12px;">完成连续追剧解锁</p>
     </div>
-    <!-- Card 3 -->
-    <div class="asset-card">
-      <div class="as-type">成长资产</div>
-      <div class="as-title">追剧成就卡</div>
-      <span class="as-status locked">待解锁</span>
-      <span class="as-tag">连续追剧 7 天</span>
-      <div class="as-preview">
-        <svg viewBox="0 0 40 40"><path d="M20 6l3 10h10l-8 6 3 10-8-6-8 6 3-10-8-6h10z" fill="none" stroke="#CCC" stroke-width="1.5"/></svg>
-        <span class="as-ph-label">UI 预览</span>
+
+    <!-- 卡3：剧迷等级称号 -->
+    <div style="padding:20px;border-right:3px solid #111;background:#fff;
+                display:flex;flex-direction:column;">
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#777;
+                letter-spacing:1px;margin-bottom:6px;">身份资产</p>
+      <h3 style="font-size:16px;font-weight:900;margin-bottom:6px;">剧迷等级称号</h3>
+      <span style="display:inline-block;background:#0B38C8;color:#fff;
+                   font-family:'DM Mono',monospace;font-size:10px;
+                   padding:2px 10px;font-weight:700;margin-bottom:10px;">已点亮</span>
+      <p style="font-size:12px;color:#0B38C8;margin-bottom:16px;">高共鸣观众</p>
+      <div style="background:#F2F2EF;border:2px solid #111;padding:16px;
+                  text-align:center;flex:1;display:flex;flex-direction:column;
+                  align-items:center;justify-content:center;">
+        <p style="font-size:18px;font-weight:900;color:#111;">资深虐恋观察员</p>
+        <p style="font-family:'DM Mono',monospace;font-size:10px;color:#777;
+                  letter-spacing:1px;margin-top:4px;">DRAMA LEVEL 04</p>
+        <p style="font-size:16px;margin-top:8px;color:#FFB800;">★★★★☆</p>
       </div>
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#AAA;
+                margin-top:12px;">获得于 2026.04.28</p>
     </div>
-    <!-- Card 4 -->
-    <div class="asset-card">
-      <div class="as-type">身份资产</div>
-      <div class="as-title">剧迷等级称号</div>
-      <span class="as-status lit">已点亮</span>
-      <span class="as-tag">高共鸣观众</span>
-      <div class="as-preview">
-        <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="none" stroke="#CCC" stroke-width="1.5"/><path d="M13 22l5 5 9-9" fill="none" stroke="#CCC" stroke-width="1.5"/></svg>
-        <span class="as-ph-label">UI 预览</span>
+
+    <!-- 卡4：年度观剧报告 -->
+    <div style="padding:20px;background:#fff;display:flex;flex-direction:column;">
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#777;
+                letter-spacing:1px;margin-bottom:6px;">周期资产</p>
+      <h3 style="font-size:16px;font-weight:900;margin-bottom:6px;">年度观剧报告</h3>
+      <span style="display:inline-block;background:#111;color:#fff;
+                   font-family:'DM Mono',monospace;font-size:10px;
+                   padding:2px 10px;font-weight:700;margin-bottom:10px;">季度生成</span>
+      <p style="font-size:12px;color:#777;margin-bottom:16px;">情绪峰值分析</p>
+      <div style="background:#F2F2EF;border:2px solid #111;padding:14px;flex:1;">
+        <div style="display:flex;align-items:flex-end;gap:3px;height:48px;
+                    margin-bottom:8px;">
+          <div style="flex:1;height:35%;background:#0B38C8;"></div>
+          <div style="flex:1;height:55%;background:#0B38C8;"></div>
+          <div style="flex:1;height:85%;background:#0B38C8;"></div>
+          <div style="flex:1;height:42%;background:#0B38C8;"></div>
+          <div style="flex:1;height:95%;background:#D92B1E;"></div>
+          <div style="flex:1;height:60%;background:#0B38C8;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;
+                    font-family:'DM Mono',monospace;font-size:9px;color:#AAA;">
+          <span>第9集</span><span>第10集</span><span>第11集</span>
+          <span>第12集</span><span>第13集</span><span>第14集</span>
+        </div>
+        <p style="font-size:12px;color:#777;margin-top:8px;line-height:1.6;">
+          第12集情绪峰值最高，触达率 92%</p>
       </div>
-    </div>
-    <!-- Card 5 -->
-    <div class="asset-card">
-      <div class="as-type">体育资产</div>
-      <div class="as-title">观赛身份卡</div>
-      <span class="as-status ext">拓展场景</span>
-      <span class="as-tag">中场竞猜玩家</span>
-      <div class="as-preview">
-        <svg viewBox="0 0 40 40"><rect x="6" y="8" width="28" height="24" rx="2" fill="none" stroke="#CCC" stroke-width="1.5"/><line x1="6" y1="16" x2="34" y2="16" stroke="#CCC" stroke-width="0.8"/><circle cx="20" cy="20" r="4" fill="none" stroke="#CCC" stroke-width="1"/></svg>
-        <span class="as-ph-label">UI 预览</span>
-      </div>
-    </div>
-    <!-- Card 6 -->
-    <div class="asset-card">
-      <div class="as-type">周期资产</div>
-      <div class="as-title">AI 追剧报告</div>
-      <span class="as-status qtr">季度生成</span>
-      <span class="as-tag">情绪峰值分析</span>
-      <div class="as-preview">
-        <svg viewBox="0 0 40 40"><rect x="6" y="26" width="6" height="8" fill="none" stroke="#CCC" stroke-width="1.5"/><rect x="15" y="18" width="6" height="16" fill="none" stroke="#CCC" stroke-width="1.5"/><rect x="24" y="10" width="6" height="24" fill="none" stroke="#CCC" stroke-width="1.5"/><polyline points="9,24 18,16 27,8" fill="none" stroke="#CCC" stroke-width="1"/></svg>
-        <span class="as-ph-label">UI 预览</span>
-      </div>
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#AAA;
+                text-align:right;margin-top:12px;">由 MOMERA 冠名 · 2026 Q2</p>
     </div>
   </div>
-  <div class="asset-bottom">品牌不再只是一次曝光，而是随用户资产一起被保存、展示和分享。</div>
+
+  <!-- 分区2：体育·电竞 -->
+  <div style="border:3px solid #0B38C8;box-shadow:5px 5px 0 #111;
+              display:flex;align-items:center;gap:14px;
+              padding:14px 20px;background:#0B38C8;margin-bottom:0;">
+    <div style="width:8px;height:28px;background:#FFE100;flex-shrink:0;"></div>
+    <span style="font-size:15px;font-weight:900;color:#FFE100;">体育 · 电竞</span>
+    <span style="font-family:'DM Mono',monospace;font-size:10px;
+                 color:rgba(255,255,255,0.4);letter-spacing:2px;margin-left:auto;">
+      SPORTS · ESPORTS</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+              border:3px solid #111;border-top:none;margin-bottom:48px;">
+
+    <!-- 体育卡1：观赛身份卡 -->
+    <div style="padding:20px;border-right:3px solid #111;background:#fff;
+                display:flex;flex-direction:column;">
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#777;
+                letter-spacing:1px;margin-bottom:6px;">体育资产</p>
+      <h3 style="font-size:16px;font-weight:900;margin-bottom:6px;">观赛身份卡</h3>
+      <span style="display:inline-block;background:#D92B1E;color:#fff;
+                   font-family:'DM Mono',monospace;font-size:10px;
+                   padding:2px 10px;font-weight:700;margin-bottom:10px;">拓展场景</span>
+      <p style="font-size:12px;color:#D92B1E;margin-bottom:16px;">中场竞猜玩家</p>
+      <div style="border:2px solid #111;overflow:hidden;flex:1;">
+        <div style="background:#552583;padding:14px;text-align:center;">
+          <p style="font-size:16px;font-weight:900;color:#FDB927;">🟣 湖人死忠粉</p>
+          <p style="font-family:'DM Mono',monospace;font-size:9px;
+                    color:rgba(255,215,0,0.5);margin-top:4px;letter-spacing:2px;">
+            MATCH IDENTITY CARD</p>
+        </div>
+        <div style="padding:12px;display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;
+                      padding:4px 0;border-bottom:1px solid #EEE;">
+            <span style="color:#777;">支持阵营</span>
+            <span style="font-weight:700;color:#552583;">湖人 LAL</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;
+                      padding:4px 0;">
+            <span style="color:#777;">命中率</span>
+            <span style="font-weight:700;">67%</span>
+          </div>
+        </div>
+      </div>
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#AAA;
+                margin-top:12px;">NBA 常规赛 · 2026赛季</p>
+    </div>
+
+    <!-- 体育卡2：竞猜命中率卡 -->
+    <div style="padding:20px;border-right:3px solid #111;background:#fff;
+                display:flex;flex-direction:column;">
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#777;
+                letter-spacing:1px;margin-bottom:6px;">数据资产</p>
+      <h3 style="font-size:16px;font-weight:900;margin-bottom:6px;">竞猜命中率卡</h3>
+      <span style="display:inline-block;background:#FFE100;color:#111;
+                   font-family:'DM Mono',monospace;font-size:10px;
+                   padding:2px 10px;font-weight:700;margin-bottom:10px;">本赛季</span>
+      <p style="font-size:12px;color:#777;margin-bottom:16px;">赛季竞猜数据</p>
+      <div style="background:#F2F2EF;border:2px solid #111;padding:14px;
+                  text-align:center;flex:1;display:flex;flex-direction:column;
+                  align-items:center;justify-content:center;">
+        <span style="font-size:48px;font-weight:900;color:#111;line-height:1;">67</span>
+        <span style="font-size:14px;color:#777;">%</span>
+        <p style="font-family:'DM Mono',monospace;font-size:10px;color:#AAA;
+                  margin-top:6px;">本赛季竞猜命中率</p>
+        <div style="height:4px;background:#EEE;border:1px solid #111;
+                    width:100%;margin-top:10px;">
+          <div style="width:67%;height:100%;background:#0B38C8;"></div>
+        </div>
+      </div>
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#AAA;
+                margin-top:12px;">已参与 14 场竞猜</p>
+    </div>
+
+    <!-- 体育卡3：观赛高光切片 -->
+    <div style="padding:20px;background:#fff;display:flex;flex-direction:column;">
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#777;
+                letter-spacing:1px;margin-bottom:6px;">瞬间资产</p>
+      <h3 style="font-size:16px;font-weight:900;margin-bottom:6px;">观赛高光切片</h3>
+      <span style="display:inline-block;background:#111;color:#FFE100;
+                   font-family:'DM Mono',monospace;font-size:10px;
+                   padding:2px 10px;font-weight:700;margin-bottom:10px;">AI 自动生成</span>
+      <p style="font-size:12px;color:#777;margin-bottom:16px;">关键球时刻</p>
+      <div style="background:#0a1628;border:2px solid #111;padding:20px;
+                  text-align:center;flex:1;display:flex;flex-direction:column;
+                  align-items:center;justify-content:center;">
+        <span style="font-size:36px;display:block;margin-bottom:8px;">🏀</span>
+        <p style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.7;">
+          你在场的那一刻<br>湖人绝杀 · Q4 最后3秒</p>
+        <p style="font-family:'DM Mono',monospace;font-size:10px;
+                  color:rgba(255,255,255,0.3);margin-top:8px;">2026.04.18 · Q4</p>
+      </div>
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#AAA;
+                margin-top:12px;">随赛季持续累积</p>
+    </div>
+  </div>
+
+  <!-- 分区3：粉丝·IP -->
+  <div style="border:3px solid #111;box-shadow:5px 5px 0 #111;
+              display:flex;align-items:center;gap:14px;
+              padding:14px 20px;background:#111;margin-bottom:0;">
+    <div style="width:8px;height:28px;background:#FFE100;flex-shrink:0;"></div>
+    <span style="font-size:15px;font-weight:900;color:#FFE100;">粉丝 · IP</span>
+    <span style="font-family:'DM Mono',monospace;font-size:10px;
+                 color:rgba(255,255,255,0.4);letter-spacing:2px;margin-left:auto;">
+      FANS · IP</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+              border:3px solid #111;border-top:none;margin-bottom:48px;">
+
+    <!-- 粉丝卡1：陪伴拍立得（最突出） -->
+    <div style="padding:20px;border-right:3px solid #FFE100;border-top:3px solid #FFE100;
+                border-bottom:3px solid #FFE100;border-left:3px solid #FFE100;
+                background:#fff;display:flex;flex-direction:column;
+                box-shadow:inset 0 0 0 0;position:relative;z-index:1;">
+      <div style="display:flex;justify-content:space-between;
+                  align-items:flex-start;margin-bottom:6px;">
+        <p style="font-family:'DM Mono',monospace;font-size:10px;color:#777;
+                  letter-spacing:1px;">粉丝 / IP 资产</p>
+        <span style="background:#FFE100;color:#111;font-family:'DM Mono',monospace;
+                     font-size:10px;padding:2px 8px;font-weight:700;">稀有资产 ✦</span>
+      </div>
+      <h3 style="font-size:18px;font-weight:900;margin-bottom:4px;">陪伴拍立得</h3>
+      <p style="font-size:12px;color:#0B38C8;margin-bottom:12px;">和TA同框一下</p>
+      <div style="border:2px solid #EEE;overflow:hidden;margin-bottom:12px;">
+        <img src="./assets/images/polaroid_result_fireworks.png"
+             onerror="this.src='/assets/images/polaroid_result_fireworks.png';this.onerror=null;"
+             style="width:100%;height:auto;display:block;object-fit:contain;">
+      </div>
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#AAA;
+                text-align:center;margin-bottom:12px;">MOMERA 瞬野 × 此刻在场</p>
+      <p style="font-size:11px;color:#777;margin-top:auto;">由情绪拍立得流程生成</p>
+    </div>
+
+    <!-- 粉丝卡2：粉丝等级证书 -->
+    <div style="padding:20px;border-left:3px solid #111;
+                background:#fff;display:flex;flex-direction:column;">
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#777;
+                letter-spacing:1px;margin-bottom:6px;">身份资产</p>
+      <h3 style="font-size:16px;font-weight:900;margin-bottom:6px;">粉丝等级证书</h3>
+      <span style="display:inline-block;background:#D92B1E;color:#fff;
+                   font-family:'DM Mono',monospace;font-size:10px;
+                   padding:2px 10px;font-weight:700;margin-bottom:10px;">死忠级</span>
+      <p style="font-size:12px;color:#D92B1E;margin-bottom:16px;">观看时长 TOP 5%</p>
+      <div style="background:#F2F2EF;border:2px solid #111;padding:14px;
+                  text-align:center;flex:1;display:flex;flex-direction:column;
+                  align-items:center;justify-content:center;">
+        <div style="border:2px dashed #CCC;padding:16px;width:100%;margin-bottom:8px;">
+          <span style="font-size:28px;display:block;">🏆</span>
+          <p style="font-size:13px;font-weight:900;margin-top:6px;">资深粉丝认证</p>
+          <p style="font-family:'DM Mono',monospace;font-size:9px;color:#777;
+                    margin-top:4px;letter-spacing:1px;">CERTIFIED FAN · LEVEL 05</p>
+        </div>
+        <div style="height:4px;background:#EEE;border:1px solid #111;width:100%;">
+          <div style="width:85%;height:100%;background:#D92B1E;"></div>
+        </div>
+      </div>
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#AAA;
+                margin-top:12px;">解锁于 2026.04.20</p>
+    </div>
+
+    <!-- 粉丝卡3：限定收集图鉴 -->
+    <div style="padding:20px;background:#fff;display:flex;flex-direction:column;">
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#777;
+                letter-spacing:1px;margin-bottom:6px;">收集资产</p>
+      <h3 style="font-size:16px;font-weight:900;margin-bottom:6px;">限定收集图鉴</h3>
+      <span style="display:inline-block;background:#0B38C8;color:#FFE100;
+                   font-family:'DM Mono',monospace;font-size:10px;
+                   padding:2px 10px;font-weight:700;margin-bottom:10px;">收集中</span>
+      <p style="font-size:12px;color:#0B38C8;margin-bottom:16px;">集齐解锁隐藏卡</p>
+      <div style="background:#F2F2EF;border:2px solid #111;padding:14px;flex:1;">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;
+                    margin-bottom:8px;">
+          <div style="background:#0B38C8;aspect-ratio:1;display:flex;
+                      align-items:center;justify-content:center;font-size:18px;">⭐</div>
+          <div style="background:#0B38C8;aspect-ratio:1;display:flex;
+                      align-items:center;justify-content:center;font-size:18px;">⭐</div>
+          <div style="background:#0B38C8;aspect-ratio:1;display:flex;
+                      align-items:center;justify-content:center;font-size:18px;">⭐</div>
+          <div style="background:#0B38C8;aspect-ratio:1;display:flex;
+                      align-items:center;justify-content:center;font-size:18px;">⭐</div>
+          <div style="background:#E8E8E5;aspect-ratio:1;display:flex;
+                      align-items:center;justify-content:center;
+                      font-size:18px;color:#CCC;font-weight:900;">?</div>
+          <div style="background:#E8E8E5;aspect-ratio:1;display:flex;
+                      align-items:center;justify-content:center;
+                      font-size:18px;color:#CCC;font-weight:900;">?</div>
+        </div>
+        <p style="font-family:'DM Mono',monospace;font-size:10px;color:#777;">
+          4/6 已解锁 · 还差 2 张</p>
+      </div>
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#AAA;
+                margin-top:12px;">每集互动节点解锁</p>
+    </div>
+  </div>
+
+  <!-- 分区4：AI创意报告 -->
+  <div style="border:3px solid #111;box-shadow:5px 5px 0 #111;
+              display:flex;align-items:center;gap:14px;
+              padding:14px 20px;background:#F2F2EF;margin-bottom:0;">
+    <div style="width:8px;height:28px;background:#0B38C8;flex-shrink:0;"></div>
+    <span style="font-size:15px;font-weight:900;color:#111;">AI 创意报告</span>
+    <span style="font-family:'DM Mono',monospace;font-size:10px;color:#777;
+                 letter-spacing:2px;margin-left:auto;">AI CREATIVE REPORTS</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+              border:3px solid #111;border-top:none;margin-bottom:48px;">
+
+    <!-- 报告卡1：年度观剧人格 -->
+    <div style="padding:20px;border-right:3px solid #111;background:#fff;
+                display:flex;flex-direction:column;">
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#777;
+                letter-spacing:1px;margin-bottom:6px;">年度报告</p>
+      <h3 style="font-size:16px;font-weight:900;margin-bottom:6px;">年度观剧人格</h3>
+      <span style="display:inline-block;background:#111;color:#FFE100;
+                   font-family:'DM Mono',monospace;font-size:10px;
+                   padding:2px 10px;font-weight:700;margin-bottom:10px;">年度生成</span>
+      <p style="font-size:12px;color:#777;margin-bottom:16px;">情绪驱动型观众</p>
+      <div style="background:#0B38C8;border:2px solid #111;padding:20px;
+                  text-align:center;flex:1;display:flex;flex-direction:column;
+                  align-items:center;justify-content:center;">
+        <p style="font-size:20px;font-weight:900;color:#FFE100;">深情沉浸者</p>
+        <p style="font-family:'DM Mono',monospace;font-size:10px;
+                  color:rgba(255,255,255,0.4);letter-spacing:2px;margin-top:4px;">
+          EMOTIONAL IMMERSIVE</p>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;
+                    justify-content:center;margin-top:12px;">
+          <span style="border:1px solid rgba(255,255,255,0.3);
+                       color:rgba(255,255,255,0.8);font-family:'DM Mono',monospace;
+                       font-size:10px;padding:2px 8px;">高共鸣</span>
+          <span style="border:1px solid rgba(255,255,255,0.3);
+                       color:rgba(255,255,255,0.8);font-family:'DM Mono',monospace;
+                       font-size:10px;padding:2px 8px;">爱截图</span>
+          <span style="border:1px solid rgba(255,255,255,0.3);
+                       color:rgba(255,255,255,0.8);font-family:'DM Mono',monospace;
+                       font-size:10px;padding:2px 8px;">常弹幕</span>
+        </div>
+      </div>
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#AAA;
+                margin-top:12px;">基于全年观剧行为分析 · MOMERA 冠名</p>
+    </div>
+
+    <!-- 报告卡2：季度观剧报告 -->
+    <div style="padding:20px;border-right:3px solid #111;background:#fff;
+                display:flex;flex-direction:column;">
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#777;
+                letter-spacing:1px;margin-bottom:6px;">周期报告</p>
+      <h3 style="font-size:16px;font-weight:900;margin-bottom:6px;">季度观剧报告</h3>
+      <span style="display:inline-block;background:#0B38C8;color:#fff;
+                   font-family:'DM Mono',monospace;font-size:10px;
+                   padding:2px 10px;font-weight:700;margin-bottom:10px;">Q2 已生成</span>
+      <p style="font-size:12px;color:#0B38C8;margin-bottom:16px;">2026 年第二季度</p>
+      <div style="background:#F2F2EF;border:2px solid #111;padding:14px;flex:1;">
+        <div style="display:flex;flex-direction:column;gap:0;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;
+                      padding:6px 0;border-bottom:1px solid #EEE;">
+            <span style="color:#777;">观剧集数</span>
+            <span style="font-weight:700;">47 集</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;
+                      padding:6px 0;border-bottom:1px solid #EEE;">
+            <span style="color:#777;">情绪峰值</span>
+            <span style="font-weight:700;color:#D92B1E;">第12集</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;
+                      padding:6px 0;border-bottom:1px solid #EEE;">
+            <span style="color:#777;">最爱类型</span>
+            <span style="font-weight:700;">虐恋剧</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;
+                      padding:6px 0;">
+            <span style="color:#777;">总时长</span>
+            <span style="font-weight:700;">38.5 小时</span>
+          </div>
+        </div>
+      </div>
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#AAA;
+                text-align:right;margin-top:12px;">由 MOMERA 瞬野 冠名出品</p>
+    </div>
+
+    <!-- 报告卡3：弹幕情绪图谱 -->
+    <div style="padding:20px;background:#fff;display:flex;flex-direction:column;">
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#777;
+                letter-spacing:1px;margin-bottom:6px;">数据资产</p>
+      <h3 style="font-size:16px;font-weight:900;margin-bottom:6px;">弹幕情绪图谱</h3>
+      <span style="display:inline-block;background:#D92B1E;color:#fff;
+                   font-family:'DM Mono',monospace;font-size:10px;
+                   padding:2px 10px;font-weight:700;margin-bottom:10px;">AI 分析</span>
+      <p style="font-size:12px;color:#D92B1E;margin-bottom:16px;">全剧情绪曲线</p>
+      <div style="background:#F2F2EF;border:2px solid #111;padding:14px;flex:1;">
+        <div style="display:flex;align-items:flex-end;gap:2px;height:48px;
+                    margin-bottom:8px;">
+          <div style="flex:1;height:20%;background:rgba(11,56,200,0.3);"></div>
+          <div style="flex:1;height:35%;background:rgba(11,56,200,0.3);"></div>
+          <div style="flex:1;height:60%;background:#0B38C8;"></div>
+          <div style="flex:1;height:45%;background:rgba(11,56,200,0.3);"></div>
+          <div style="flex:1;height:80%;background:#0B38C8;"></div>
+          <div style="flex:1;height:55%;background:#0B38C8;"></div>
+          <div style="flex:1;height:90%;background:#0B38C8;"></div>
+          <div style="flex:1;height:70%;background:#0B38C8;"></div>
+          <div style="flex:1;height:95%;background:#D92B1E;"></div>
+          <div style="flex:1;height:65%;background:#0B38C8;"></div>
+          <div style="flex:1;height:40%;background:rgba(11,56,200,0.3);"></div>
+          <div style="flex:1;height:30%;background:rgba(11,56,200,0.3);"></div>
+        </div>
+        <p style="font-size:12px;color:#777;line-height:1.6;">
+          共 14 集 · 第12集情绪峰值最高</p>
+      </div>
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#AAA;
+                margin-top:12px;">实时弹幕语义分析生成</p>
+    </div>
+  </div>
+
+  <!-- 底部总结条 -->
+  <div style="border:3px solid #111;box-shadow:7px 7px 0 #111;
+              background:#111;padding:28px 40px;text-align:center;">
+    <p style="font-size:16px;font-weight:700;color:#FFE100;line-height:1.9;">
+      品牌不再只是一次曝光，<br>
+      而是随用户资产一起被
+      <span style="background:rgba(255,225,0,0.15);padding:0 6px;">保存</span>、
+      <span style="background:rgba(255,225,0,0.15);padding:0 6px;">展示</span>、
+      <span style="background:rgba(255,225,0,0.15);padding:0 6px;">分享</span>。
+    </p>
+    <p style="font-family:'DM Mono',monospace;font-size:11px;
+              color:rgba(255,255,255,0.3);margin-top:12px;letter-spacing:0.5px;">
+      以上资产均由品牌联合出品或冠名，随用户内容档案长期在场</p>
+  </div>
+
 </div>
 </section>
 
-<!-- SECTION 06: POLAROID FLOW -->
-<section id="polaroid">
-<div class="inner">
-  <p class="func-tag">FUNC 05</p>
-  <h2 class="sec-title">AI 具身陪伴拍立得 · 主流程</h2>
 
-  <div class="pol-grid">
-    <!-- Left: Step list -->
-    <div class="step-list" id="step-list">
-      <div class="step-item active" data-step="1"><span class="si-num">01</span>播放器缓冲节点</div>
-      <div class="step-item" data-step="2"><span class="si-num">02</span>情绪引导</div>
-      <div class="step-item" data-step="3"><span class="si-num">03</span>用户点击「想留住」</div>
-      <div class="step-item" data-step="4"><span class="si-num">04</span>数字人回应</div>
-      <div class="step-item" data-step="5"><span class="si-num">05</span>授权模拟</div>
-      <div class="step-item" data-step="6"><span class="si-num">06</span>生成中</div>
-      <div class="step-item" data-step="7"><span class="si-num">07</span>拍立得结果</div>
-      <div class="step-item" data-step="8"><span class="si-num">08</span>入库提示</div>
-    </div>
+<!-- SECTION 06: BUSINESS VALUE -->
+<section id="business-value" style="background:#fff;">
+<div style="max-width:1280px;margin:0 auto;padding:96px 64px;">
 
-    <!-- Center: Main content -->
-    <div id="polaroid-main" style="min-width:0">
+  <p style="font-family:'DM Mono',monospace;font-size:12px;color:#0B38C8;
+             letter-spacing:3px;margin-bottom:12px;">CONCLUSION</p>
+  <h2 style="font-size:clamp(40px,5vw,72px);font-weight:900;line-height:1;
+              margin-bottom:16px;">商业价值总结</h2>
+  <p style="font-size:16px;color:#777;margin-bottom:48px;">
+    三方价值总结，让决策者理解商业意义。</p>
 
-      <!-- STATE 1+2: Player + Quick replies -->
-      <div class="step-panel show" data-panel="1">
-        <div class="player-wrap sp-player">
-          <div class="player-top">
-            <div class="pt-left"><div class="pt-dot"></div><span class="pt-name">腾讯视频</span><span class="pt-sep">·</span><span class="pt-ep">假装偶然 · 第12集</span></div>
-            <div class="pt-right"><span class="pt-vip">VIP</span><span class="pt-dots">···</span></div>
-          </div>
-          <div class="video-container">
-            <video src="./assets/videos/content_buffer_female.mp4" muted loop playsinline autoplay style="width:100%;height:100%;object-fit:cover"></video>
-            <div class="sp-overlay">
-              <div class="sp-q">这一刻，想怎么回应？</div>
-              <div class="sp-hint">发一句弹幕，TA会回应你</div>
-              <div class="sp-quick">
-                <button class="sp-want" onclick="setStep(3)">想留住</button>
-                <button class="sp-disabled" onclick="showToast('Demo 中暂未展开')">有点累</button>
-                <button class="sp-disabled" onclick="showToast('Demo 中暂未展开')">陪我一下</button>
-              </div>
-            </div>
-          </div>
-          <div class="player-bottom">
-            <span class="pb-icon">▶</span><span class="pb-time">00:43</span>
-            <div class="pb-bar"><div class="pb-fill" style="width:30%;background:var(--blue)"></div></div>
-            <span class="pb-time">24:18</span>
-            <span class="pb-icon">💬</span>
-            <span class="pb-info">字幕 · 720P · 🎵</span>
-          </div>
-        </div>
-      </div>
+  <!-- 三列价值卡 -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+              border:3px solid #111;box-shadow:7px 7px 0 #111;">
 
-      <!-- STATE 3+4: Digital human response -->
-      <div class="step-panel" data-panel="3">
-        <div class="sp-dh-tag">数字人回应</div>
-        <div class="sp-dh-quote">这一刻，好像真的值得被留下来。<br>来吧，我陪你拍一张。</div>
-        <div class="sp-dh-media" id="dh-media">
-          <img src="./assets/images/digital_human_portrait.png" alt="数字人" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-          <video src="./assets/videos/digital_human_keep_moment.mp4" muted loop playsinline style="display:none;width:100%" onerror="this.style.display='none';this.parentElement.querySelector('.sp-dh-fallback').style.display='flex'"></video>
-          <div class="sp-dh-fallback">数字人形象</div>
-        </div>
-        <div class="sp-dh-btns">
-          <button class="btn btn-blue" onclick="setStep(5)">开启相机</button>
-          <button class="btn" onclick="setStep(5)">上传照片</button>
-        </div>
-      </div>
-
-      <!-- STATE 5: Authorization -->
-      <div class="step-panel" data-panel="5">
-        <div class="sp-auth">
-          <img src="./assets/images/brand_momera_logo.png" alt="MOMERA" class="sp-auth-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" style="margin:0 auto 24px;display:block">
-          <div style="display:none;font-weight:900;font-size:18px;margin-bottom:24px">MOMERA 此刻</div>
-          <div class="sp-auth-title">此刻 AI 陪伴拍立得</div>
-          <div class="sp-auth-desc">拍下你现在的场景，我来陪你把它留住。</div>
-          <div class="sp-auth-privacy">仅在你授权后调用相机，画面只用于本次拍立得生成。</div>
-          <button class="btn btn-blue" onclick="setStep(6)">使用示例场景</button>
-        </div>
-      </div>
-
-      <!-- STATE 6: Generating -->
-      <div class="step-panel" data-panel="6">
-        <div class="sp-gen">
-          <div class="sp-gen-title">正在为你生成陪伴拍立得……</div>
-          <div class="sp-checklist" id="sp-checklist">
-            <div class="sp-check-item show" id="check1"><span class="sp-check-box done">✓</span>正在理解你的表达……</div>
-            <div class="sp-check-item" id="check2"><span class="sp-check-box">✓</span>正在匹配陪伴姿态……</div>
-            <div class="sp-check-item" id="check3"><span class="sp-check-box">✓</span>正在生成陪伴拍立得……</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- STATE 7: Result -->
-      <div class="step-panel" data-panel="7">
-        <div class="sp-result">
-          <div class="sp-polaroid">
-            <img src="./assets/images/polaroid_result_fireworks.png" alt="拍立得" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-            <div class="sp-pol-fallback">✨ 陪伴拍立得</div>
-            <div class="sp-pol-brand">MOMERA 此刻 × 此刻在场</div>
-          </div>
-          <div class="sp-info">
-            <div class="sp-res-title">你的陪伴拍立得已生成</div>
-            <div class="sp-res-desc">这一张拍立得，替你留住刚刚那一刻。</div>
-            <div class="sp-tags"><span>#这一刻被留住</span><span>#和TA同框一下</span></div>
-            <div class="sp-res-brand">由 MOMERA 此刻 × 此刻在场 联合生成</div>
-            <div class="sp-saved">✓ 已保存至你的 AI 数字资产库</div>
-            <div class="sp-res-btns">
-              <button class="btn" onclick="showToast('已保存 ✓')">保存图片</button>
-              <button class="btn btn-blue" onclick="showToast('分享链接已生成')">分享给好友</button>
-              <button class="btn" onclick="setStep(8)">继续观看</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- STATE 8: Done / archived -->
-      <div class="step-panel" data-panel="8">
-        <div class="sp-done">
-          <div class="sp-done-emoji">📦</div>
-          <div class="sp-done-title">已归档至 AI 数字资产库</div>
-          <div class="sp-done-desc">每一次互动，都沉淀为可保存、可展示、可分享的内容资产。</div>
-          <a href="#asset-library" class="btn btn-yellow">查看资产库</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Right: AI Lens -->
-    <div class="lens-panel" id="polaroid-lens" style="position:sticky;top:72px;">
-      <div class="lens-header"><div class="lens-dot" id="pol-lens-dot"></div><span class="lens-title">AI LENS · 实时判断</span></div>
-      <div id="pol-lens-rows"></div>
-    </div>
-  </div>
-</div>
-</section>
-
-<!-- SECTION 07: BUSINESS VALUE -->
-<section id="business-value">
-<div class="inner" style="background:#fff">
-  <p class="func-tag">CONCLUSION</p>
-  <h2 class="sec-title">商业价值总结</h2>
-  <p class="sec-desc">三方价值总结，让决策者理解商业意义。</p>
-  <div class="bv-grid">
-    <div class="bv-card">
-      <div class="bv-emoji">🙋</div>
-      <div class="bv-title">用户</div>
-      <ul class="bv-list">
-        <li>少打断</li><li>更贴场景</li><li>能表达</li><li>可保存</li>
+    <!-- 用户 -->
+    <div style="padding:40px 32px;border-right:3px solid #111;">
+      <div style="font-size:32px;margin-bottom:16px;">🐱</div>
+      <h3 style="font-size:24px;font-weight:900;margin-bottom:20px;
+                 padding-bottom:16px;border-bottom:3px solid #111;">用户</h3>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:0;">
+        <li style="padding:10px 0;font-size:15px;display:flex;
+                   align-items:center;gap:10px;border-bottom:1px solid #EEE;">
+          <span style="color:#0B38C8;font-weight:700;flex-shrink:0;">→</span>少打断</li>
+        <li style="padding:10px 0;font-size:15px;display:flex;
+                   align-items:center;gap:10px;border-bottom:1px solid #EEE;">
+          <span style="color:#0B38C8;font-weight:700;flex-shrink:0;">→</span>更贴场景</li>
+        <li style="padding:10px 0;font-size:15px;display:flex;
+                   align-items:center;gap:10px;border-bottom:1px solid #EEE;">
+          <span style="color:#0B38C8;font-weight:700;flex-shrink:0;">→</span>能表达</li>
+        <li style="padding:10px 0;font-size:15px;display:flex;
+                   align-items:center;gap:10px;">
+          <span style="color:#0B38C8;font-weight:700;flex-shrink:0;">→</span>可保存</li>
       </ul>
     </div>
-    <div class="bv-card">
-      <div class="bv-emoji">📺</div>
-      <div class="bv-title">腾讯视频</div>
-      <ul class="bv-list">
-        <li>广告库存从时间位升级为参与节点</li>
-        <li>沉淀互动反馈</li>
-        <li>提升内容后链路价值</li>
+
+    <!-- 腾讯视频 -->
+    <div style="padding:40px 32px;border-right:3px solid #111;
+                background:#F2F2EF;">
+      <div style="font-size:32px;margin-bottom:16px;">📺</div>
+      <h3 style="font-size:24px;font-weight:900;margin-bottom:20px;
+                 padding-bottom:16px;border-bottom:3px solid #111;">腾讯视频</h3>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:0;">
+        <li style="padding:10px 0;font-size:15px;display:flex;
+                   align-items:center;gap:10px;border-bottom:1px solid #DDD;">
+          <span style="color:#0B38C8;font-weight:700;flex-shrink:0;">→</span>
+          广告库存从时间位升级为参与节点</li>
+        <li style="padding:10px 0;font-size:15px;display:flex;
+                   align-items:center;gap:10px;border-bottom:1px solid #DDD;">
+          <span style="color:#0B38C8;font-weight:700;flex-shrink:0;">→</span>
+          沉淀互动反馈</li>
+        <li style="padding:10px 0;font-size:15px;display:flex;
+                   align-items:center;gap:10px;">
+          <span style="color:#0B38C8;font-weight:700;flex-shrink:0;">→</span>
+          提升内容后链路价值</li>
       </ul>
     </div>
-    <div class="bv-card">
-      <div class="bv-emoji">🤝</div>
-      <div class="bv-title">广告主</div>
-      <ul class="bv-list">
-        <li>从买曝光升级为买共创结果资产</li>
-        <li>获得更高质量触达</li>
-        <li>随用户资产持续传播</li>
+
+    <!-- 广告主 -->
+    <div style="padding:40px 32px;background:#0B38C8;">
+      <div style="font-size:32px;margin-bottom:16px;">🤝</div>
+      <h3 style="font-size:24px;font-weight:900;margin-bottom:20px;
+                 padding-bottom:16px;border-bottom:3px solid rgba(255,255,255,0.2);
+                 color:#FFE100;">广告主</h3>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:0;">
+        <li style="padding:10px 0;font-size:15px;display:flex;
+                   align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.1);
+                   color:rgba(255,255,255,0.9);">
+          <span style="color:#FFE100;font-weight:700;flex-shrink:0;">→</span>
+          从买曝光升级为买共创结果资产</li>
+        <li style="padding:10px 0;font-size:15px;display:flex;
+                   align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.1);
+                   color:rgba(255,255,255,0.9);">
+          <span style="color:#FFE100;font-weight:700;flex-shrink:0;">→</span>
+          获得更高质量触达</li>
+        <li style="padding:10px 0;font-size:15px;display:flex;
+                   align-items:center;gap:10px;color:rgba(255,255,255,0.9);">
+          <span style="color:#FFE100;font-weight:700;flex-shrink:0;">→</span>
+          随用户资产持续传播</li>
       </ul>
     </div>
   </div>
-  <div class="bv-conclusion">广告不再只是<mark>被看见</mark>，而是<mark>被参与</mark>、<mark>被保存</mark>、<mark>被传播</mark>。</div>
+
+  <!-- 大结论 -->
+  <div style="margin-top:40px;border:3px solid #111;box-shadow:7px 7px 0 #111;
+              background:#fff;padding:40px;text-align:center;">
+    <p style="font-size:clamp(18px,2.5vw,26px);font-weight:900;line-height:1.8;">
+      广告不再只是
+      <mark style="background:#FFE100;padding:0 6px;">被看见</mark>，
+      而是
+      <mark style="background:#FFE100;padding:0 6px;">被参与</mark>、
+      <mark style="background:#FFE100;padding:0 6px;">被保存</mark>、
+      <mark style="background:#FFE100;padding:0 6px;">被传播</mark>。
+    </p>
+  </div>
+
 </div>
 </section>
+
 
 <!-- FOOTER -->
 <footer class="site-footer">
