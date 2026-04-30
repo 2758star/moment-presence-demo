@@ -1578,8 +1578,954 @@ section .inner{padding:96px 64px;}
 
 </script>
 <script>
+// ================================================================
+// 全局变量
+// ================================================================
+var adTimerInterval = null;
+var danmuInterval = null;
+var progressTimer = null;
+var progressVal = 0;
+var guessChosen = null;
+var currentWord = null;
 
+// ================================================================
+// 弹幕数据
+// ================================================================
+var DANMU_DATA = {
+  trad: [
+    {text:'怎么又是广告！', top:'10%', dur:6, delay:0},
+    {text:'15秒我数着呢',   top:'24%', dur:7, delay:0.8},
+    {text:'跳过跳过跳过',   top:'38%', dur:5.5, delay:0.3},
+    {text:'能不能别插广告', top:'52%', dur:6.5, delay:1.2},
+    {text:'广告完了吗？',   top:'65%', dur:8, delay:0.6}
+  ],
+  climax: [
+    {text:'太好哭了 😭',     top:'10%', dur:10, delay:0},
+    {text:'这一幕绝了！！', top:'23%', dur:12, delay:1},
+    {text:'求不要跳广告',   top:'37%', dur:8.5, delay:0.5},
+    {text:'剧情高潮别打断我',top:'50%', dur:11, delay:1.8},
+    {text:'OMG冲冲冲',      top:'63%', dur:7.5, delay:0.2}
+  ],
+  buffer: [
+    {text:'好好看哦 ~',  top:'28%', dur:16, delay:0},
+    {text:'想发条弹幕',  top:'50%', dur:18, delay:2}
+  ],
+  buffer_ad: [
+    {text:'这广告还挺搭的',     top:'15%', dur:10, delay:0.5},
+    {text:'场景感不错',         top:'35%', dur:12, delay:1},
+    {text:'还好不是烦人的那种', top:'55%', dur:9,  delay:0.2}
+  ],
+  sports: [
+    {text:'加油湖人！', top:'10%', dur:8,  delay:0},
+    {text:'中场好无聊', top:'30%', dur:10, delay:1},
+    {text:'下半场加油', top:'50%', dur:9,  delay:0.5}
+  ]
+};
 
+// ================================================================
+// 弹幕函数
+// ================================================================
+function clearDanmu(layerId) {
+  var layer = document.getElementById(layerId || 'danmu-layer');
+  if (layer) layer.innerHTML = '';
+}
+
+function spawnDanmu(type, layerId) {
+  var layer = document.getElementById(layerId || 'danmu-layer');
+  if (!layer) return;
+  layer.innerHTML = '';
+  var data = DANMU_DATA[type];
+  if (!data) return;
+  data.forEach(function(d) {
+    var el = document.createElement('div');
+    el.className = 'danmu-item';
+    el.textContent = d.text;
+    el.style.top = d.top;
+    el.style.animationDuration = d.dur + 's';
+    el.style.animationDelay = d.delay + 's';
+    layer.appendChild(el);
+    el.addEventListener('animationend', function() { el.remove(); });
+  });
+}
+
+function loopDanmu(type, layerId) {
+  clearInterval(danmuInterval);
+  spawnDanmu(type, layerId);
+  var interval = type === 'buffer' ? 20000 : 13000;
+  danmuInterval = setInterval(function() {
+    spawnDanmu(type, layerId);
+  }, interval);
+}
+
+// ================================================================
+// 进度条
+// ================================================================
+function startProgress(speed) {
+  clearInterval(progressTimer);
+  progressVal = 0;
+  var fill = document.getElementById('progress-bar-fill');
+  if (fill) fill.style.width = '0%';
+  progressTimer = setInterval(function() {
+    progressVal = Math.min(progressVal + speed, 90);
+    if (fill) fill.style.width = progressVal + '%';
+  }, 100);
+}
+
+function pauseProgress() {
+  clearInterval(progressTimer);
+}
+
+// ================================================================
+// 倒计时
+// ================================================================
+function startCountdown(from, onEnd) {
+  clearInterval(adTimerInterval);
+  var c = from;
+  var el = document.getElementById('ad-countdown');
+  if (el) el.textContent = c;
+  adTimerInterval = setInterval(function() {
+    c--;
+    if (el) el.textContent = c;
+    if (c <= 0) {
+      clearInterval(adTimerInterval);
+      if (typeof onEnd === 'function') onEnd();
+    }
+  }, 1000);
+}
+
+// ================================================================
+// AI Lens 更新（情绪判断模块）
+// ================================================================
+var LENS_DATA = {
+  trad: {
+    dot: '#FF3333',
+    title: '⚠ TRADITIONAL · 传统强插',
+    rows: [
+      {label:'内容状态', val:'剧情高潮中',   color:'#FFE100'},
+      {label:'系统行为', val:'强制插入广告', color:'#FFE100'},
+      {label:'用户感受', val:'体验被打断',   color:'#FFE100'},
+      {label:'跳过率',   val:'↑ 67%',       color:'rgba(255,255,255,0.45)'},
+      {label:'品牌记忆', val:'极低',          color:'rgba(255,255,255,0.3)'}
+    ]
+  },
+  buffer: {
+    dot: '#00FF88',
+    title: 'AI LENS · 实时判断',
+    rows: [
+      {label:'内容状态', val:'情绪缓冲窗口',   color:'#0B38C8'},
+      {label:'弹幕语义', val:'可承接',          color:'#FFE100'},
+      {label:'介入时机', val:'缓冲窗口 ✓',     color:'#00FF88'},
+      {label:'广告类型', val:'场景匹配版本',   color:'#FFE100'},
+      {label:'用户感受', val:'场景贴合度高',   color:'#fff'}
+    ]
+  },
+  buffer_result: {
+    dot: '#00FF88',
+    title: 'AI LENS · 对比结论',
+    rows: [
+      {label:'传统模式', val:'高潮强插·体验差',   color:'rgba(255,255,255,0.4)'},
+      {label:'AI模式',   val:'缓冲期·场景匹配',   color:'#00FF88'},
+      {label:'核心差异', val:'时机 + 版本匹配',   color:'#FFE100'},
+      {label:'用户体验', val:'明显提升',            color:'#0B38C8'}
+    ]
+  }
+};
+
+function updateLens(type) {
+  var d = LENS_DATA[type];
+  if (!d) return;
+  var dot = document.getElementById('lens-dot');
+  var title = document.getElementById('lens-title');
+  var rows = document.getElementById('lens-rows');
+  if (dot) dot.style.background = d.dot;
+  if (title) title.textContent = d.title;
+  if (rows) {
+    rows.innerHTML = d.rows.map(function(r) {
+      return '<div class="lens-row">' +
+        '<span class="lens-label">' + r.label + '</span>' +
+        '<span class="lens-val" style="color:' + r.color + '">' + r.val + '</span>' +
+        '</div>';
+    }).join('');
+  }
+}
+
+// ================================================================
+// 情绪判断模块：重置播放器
+// ================================================================
+function resetPlayer() {
+  clearInterval(adTimerInterval);
+  clearInterval(danmuInterval);
+  clearInterval(progressTimer);
+
+  var adBar   = document.getElementById('ad-interrupt-bar');
+  var adLayer = document.getElementById('ad-layer');
+  var emotionGuide = document.getElementById('emotion-guide');
+  var miniAdCard   = document.getElementById('mini-ad-card');
+
+  if (adBar)   adBar.style.display   = 'none';
+  if (adLayer) adLayer.style.display = 'none';
+  if (emotionGuide) emotionGuide.style.display = 'none';
+  if (miniAdCard)   miniAdCard.style.display   = 'none';
+
+  var adV  = document.getElementById('ad-video');
+  var mainV = document.getElementById('main-video');
+  if (adV)  { adV.pause();  adV.currentTime  = 0; }
+  if (mainV){ mainV.pause(); mainV.currentTime = 0; }
+
+  var fill = document.getElementById('progress-bar-fill');
+  if (fill) fill.style.width = '0%';
+
+  clearDanmu('danmu-layer');
+}
+
+// ================================================================
+// 情绪判断模块：传统广告模式
+// ================================================================
+function runTraditionalMode() {
+  var mainV = document.getElementById('main-video');
+  if (!mainV) return;
+
+  // 设置视频源
+  mainV.innerHTML = '<source src="./assets/videos/content_climax_female.mp4" type="video/mp4">' +
+                    '<source src="/assets/videos/content_climax_female.mp4" type="video/mp4">';
+  mainV.load();
+  mainV.play().catch(function(){});
+
+  var epTitle = document.getElementById('ep-title');
+  var badge   = document.getElementById('video-badge');
+  if (epTitle) epTitle.textContent = '假装偶然 · 第12集';
+  if (badge)   { badge.textContent = '⚠ 传统模式 · 广告即将强插'; badge.style.color = '#FFE100'; }
+
+  startProgress(0.6);
+  loopDanmu('climax', 'danmu-layer');
+  updateLens('trad');
+
+  // 5秒后插广告
+  setTimeout(function() {
+    mainV.pause();
+    pauseProgress();
+
+    var adBar = document.getElementById('ad-interrupt-bar');
+    var adLayer = document.getElementById('ad-layer');
+    var adV = document.getElementById('ad-video');
+
+    if (adBar)   adBar.style.display   = 'flex';
+    if (adLayer) adLayer.style.display = 'block';
+
+    if (adV) {
+      adV.innerHTML = '<source src="./assets/videos/ad_drink_old.mp4" type="video/mp4">' +
+                      '<source src="/assets/videos/ad_drink_old.mp4" type="video/mp4">';
+      adV.load();
+      adV.play().catch(function(){});
+    }
+
+    if (badge) { badge.textContent = '⏸ 广告强插中 · 正片已暂停'; badge.style.color = '#FF4444'; }
+    if (epTitle) epTitle.textContent = '广告时间';
+
+    clearInterval(danmuInterval);
+    spawnDanmu('trad', 'danmu-layer');
+    danmuInterval = setInterval(function(){ spawnDanmu('trad','danmu-layer'); }, 12000);
+
+    startCountdown(15, function() {
+      if (adBar)   adBar.style.display   = 'none';
+      if (adLayer) adLayer.style.display = 'none';
+      if (adV)     adV.pause();
+
+      mainV.play().catch(function(){});
+      startProgress(0.4);
+
+      if (badge)   { badge.textContent = '正片恢复 · 用户体验已被打断'; badge.style.color = '#aaa'; }
+      if (epTitle) epTitle.textContent = '假装偶然 · 第12集';
+
+      clearInterval(danmuInterval);
+      loopDanmu('climax', 'danmu-layer');
+    });
+
+  }, 5000);
+}
+
+// ================================================================
+// 情绪判断模块：AI缓冲模式
+// ================================================================
+function runBufferMode() {
+  var mainV = document.getElementById('main-video');
+  if (!mainV) return;
+
+  mainV.innerHTML = '<source src="./assets/videos/content_buffer_female.mp4" type="video/mp4">' +
+                    '<source src="/assets/videos/content_buffer_female.mp4" type="video/mp4">';
+  mainV.load();
+  mainV.play().catch(function(){});
+
+  var epTitle = document.getElementById('ep-title');
+  var badge   = document.getElementById('video-badge');
+  if (epTitle) epTitle.textContent = '假装偶然 · 第12集';
+  if (badge)   { badge.textContent = '✓ AI判断：缓冲窗口 · 准备介入'; badge.style.color = '#FFE100'; }
+
+  startProgress(0.4);
+  loopDanmu('buffer', 'danmu-layer');
+  updateLens('buffer');
+
+  // 4秒后切广告
+  setTimeout(function() {
+    mainV.pause();
+    pauseProgress();
+
+    var adBar   = document.getElementById('ad-interrupt-bar');
+    var adLayer = document.getElementById('ad-layer');
+    var adV     = document.getElementById('ad-video');
+    var adCountEl = document.getElementById('ad-countdown');
+
+    if (adBar)   adBar.style.display   = 'flex';
+    if (adLayer) adLayer.style.display = 'block';
+
+    // 改为场景版广告
+    if (adV) {
+      adV.innerHTML = '<source src="./assets/videos/ad_drink_scene_01.mp4" type="video/mp4">' +
+                      '<source src="/assets/videos/ad_drink_scene_01.mp4" type="video/mp4">';
+      adV.load();
+      adV.play().catch(function(){});
+    }
+
+    // 广告角标改文字
+    var adBadge = document.querySelector('#ad-layer .ad-badge');
+    if (adBadge) adBadge.textContent = 'AI 场景匹配广告';
+
+    if (badge)   { badge.textContent = '✓ AI缓冲介入 · 场景匹配广告'; badge.style.color = '#00FF88'; }
+    if (epTitle) epTitle.textContent = '场景匹配广告';
+
+    clearInterval(danmuInterval);
+    spawnDanmu('buffer_ad', 'danmu-layer');
+    danmuInterval = setInterval(function(){ spawnDanmu('buffer_ad','danmu-layer'); }, 12000);
+
+    startCountdown(8, function() {
+      if (adBar)   adBar.style.display   = 'none';
+      if (adLayer) adLayer.style.display = 'none';
+      if (adV)     adV.pause();
+
+      mainV.play().catch(function(){});
+      startProgress(0.3);
+
+      if (badge)   { badge.textContent = '正片恢复 · AI场景广告已完成'; badge.style.color = '#aaa'; }
+      if (epTitle) epTitle.textContent = '假装偶然 · 第12集';
+
+      clearInterval(danmuInterval);
+      loopDanmu('climax', 'danmu-layer');
+      updateLens('buffer_result');
+    });
+
+  }, 4000);
+}
+
+// ================================================================
+// 情绪判断模块：switchMode（按钮切换）
+// ================================================================
+function switchMode(mode) {
+  resetPlayer();
+
+  // 更新切换按钮样式
+  var btnTrad   = document.getElementById('btn-trad');
+  var btnBuffer = document.getElementById('btn-buffer');
+  if (btnTrad && btnBuffer) {
+    if (mode === 'trad') {
+      btnTrad.style.background   = '#D92B1E';
+      btnTrad.style.color        = '#fff';
+      btnBuffer.style.background = '#fff';
+      btnBuffer.style.color      = '#111';
+    } else {
+      btnBuffer.style.background = '#111';
+      btnBuffer.style.color      = '#FFE100';
+      btnTrad.style.background   = '#D92B1E';
+      btnTrad.style.color        = '#fff';
+    }
+  }
+
+  if (mode === 'trad')   runTraditionalMode();
+  else                   runBufferMode();
+}
+
+// ================================================================
+// 体育竞猜模块
+// ================================================================
+function startSportsExperience() {
+  var sv = document.getElementById('sports-video');
+  if (sv) {
+    sv.innerHTML = '<source src="./assets/videos/content_sports_halftime.mp4" type="video/mp4">' +
+                   '<source src="/assets/videos/content_sports_halftime.mp4" type="video/mp4">';
+    sv.load();
+    sv.play().catch(function(){});
+  }
+
+  var watchTip = document.getElementById('sports-watch-tip');
+  var tipEl    = document.getElementById('guess-unlock-tip');
+  if (watchTip) watchTip.style.display = 'flex';
+
+  var t = 5;
+  if (tipEl) tipEl.textContent = '竞猜将在 ' + t + ' 秒后开启…';
+
+  var timer = setInterval(function() {
+    t--;
+    if (tipEl) tipEl.textContent = '竞猜将在 ' + t + ' 秒后开启…';
+    if (t <= 0) {
+      clearInterval(timer);
+      if (watchTip) watchTip.style.display = 'none';
+      var gp = document.getElementById('guess-phase-1');
+      if (gp) {
+        gp.style.display    = 'block';
+        gp.style.opacity    = '0';
+        gp.style.transition = 'opacity 0.5s';
+        setTimeout(function(){ gp.style.opacity = '1'; }, 50);
+      }
+    }
+  }, 1000);
+}
+
+function chooseTeam(team) {
+  if (guessChosen) return;
+  guessChosen = team;
+
+  var btnL = document.getElementById('btn-lakers');
+  var btnW = document.getElementById('btn-warriors');
+
+  if (team === 'lakers') {
+    if (btnL) { btnL.style.transform='translate(4px,4px)'; btnL.style.boxShadow='none'; }
+    if (btnW) { btnW.style.opacity='0.35'; btnW.style.cursor='not-allowed'; btnW.style.pointerEvents='none'; }
+  } else {
+    if (btnW) { btnW.style.transform='translate(4px,4px)'; btnW.style.boxShadow='none'; }
+    if (btnL) { btnL.style.opacity='0.35'; btnL.style.cursor='not-allowed'; btnL.style.pointerEvents='none'; }
+  }
+
+  // 切换到阶段2
+  var gp1 = document.getElementById('guess-phase-1');
+  var gp2 = document.getElementById('guess-phase-2');
+  if (gp1) gp1.style.display = 'none';
+  if (gp2) gp2.style.display = 'block';
+
+  // 比例条动画
+  setTimeout(function() {
+    var barL = document.getElementById('bar-lakers');
+    var barW = document.getElementById('bar-warriors');
+    var pctL = document.getElementById('pct-lakers');
+    var pctW = document.getElementById('pct-warriors');
+    if (barL) barL.style.width = '62%';
+    if (pctL) pctL.textContent = '62';
+    if (pctW) pctW.textContent = '38';
+  }, 300);
+
+  // 参与人数递增
+  var count = 12847;
+  var countEl = document.getElementById('participant-count');
+  var countTimer = setInterval(function() {
+    count++;
+    if (countEl) countEl.textContent = '已有 ' + count.toLocaleString() + ' 人参与竞猜';
+    if (count >= 12856) clearInterval(countTimer);
+  }, 80);
+
+  // 生成身份卡
+  generateIdentityCard(team);
+
+  // 进度条
+  setTimeout(function() {
+    var pb = document.getElementById('guess-progress-bar');
+    if (pb) pb.style.width = '67%';
+  }, 800);
+
+  // 5秒后揭晓
+  setTimeout(function() {
+    var resultEl = document.getElementById('guess-result');
+    if (resultEl) {
+      resultEl.textContent = team === 'lakers' ? '✓ 命中！湖人先得分' : '✗ 未命中';
+      resultEl.style.color = team === 'lakers' ? '#00AA44' : '#D92B1E';
+    }
+    var gp3 = document.getElementById('guess-phase-3');
+    if (gp2) gp2.style.display = 'none';
+    if (gp3) gp3.style.display = 'block';
+  }, 5000);
+}
+
+function generateIdentityCard(team) {
+  var isLakers = team === 'lakers';
+  var color    = isLakers ? '#552583' : '#1D428A';
+  var accent   = isLakers ? '#FDB927' : '#FFC72C';
+  var emoji    = isLakers ? '🟣' : '🔵';
+  var name     = isLakers ? '湖人死忠粉' : '勇士忠诚者';
+  var teamName = isLakers ? '湖人队 LAL' : '勇士队 GSW';
+
+  var area = document.getElementById('identity-card-area');
+  if (!area) return;
+
+  area.style.opacity    = '0';
+  area.style.transition = 'opacity 0.4s';
+
+  area.innerHTML =
+    '<div style="border:3px solid #111;box-shadow:7px 7px 0 #111;background:#fff;overflow:hidden;position:relative;">' +
+      '<div style="background:' + color + ';padding:24px;text-align:center;position:relative;">' +
+        '<div style="position:absolute;top:12px;right:12px;background:#FFE100;color:#111;font-family:\'DM Mono\',monospace;font-size:10px;padding:3px 8px;font-weight:700;">稀有资产</div>' +
+        '<div style="font-size:48px;margin-bottom:8px;">' + emoji + '</div>' +
+        '<div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:4px;">' + name + '</div>' +
+        '<div style="font-family:\'DM Mono\',monospace;font-size:10px;color:rgba(255,255,255,0.5);letter-spacing:2px;">MATCH IDENTITY CARD</div>' +
+      '</div>' +
+      '<div style="padding:16px 20px;">' +
+        '<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #EEE;font-size:13px;"><span style="color:#777;">支持阵营</span><span style="font-weight:700;color:' + color + ';">' + teamName + '</span></div>' +
+        '<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #EEE;font-size:13px;"><span style="color:#777;">竞猜命中</span><span id="guess-result" style="font-weight:700;">待揭晓 ⏳</span></div>' +
+        '<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #EEE;font-size:13px;"><span style="color:#777;">参与时间</span><span style="font-weight:700;">Q2 · 中场休息</span></div>' +
+        '<div style="display:flex;justify-content:space-between;padding:9px 0;font-size:13px;"><span style="color:#777;">本赛季命中率</span><span style="font-weight:700;">67%</span></div>' +
+        '<div style="margin-top:14px;">' +
+          '<div style="font-family:\'DM Mono\',monospace;font-size:10px;color:#777;margin-bottom:6px;">竞猜胜率进度</div>' +
+          '<div style="height:6px;background:#EEE;border:1.5px solid #111;">' +
+            '<div id="guess-progress-bar" style="height:100%;background:#0B38C8;width:0%;transition:width 1.2s ease;"></div>' +
+          '</div>' +
+        '</div>' +
+        '<div style="font-size:11px;color:#999;font-family:\'DM Mono\',monospace;text-align:right;margin-top:12px;">由 MOMERA 瞬野 × 此刻在场 联合生成</div>' +
+        '<div style="display:flex;gap:8px;margin-top:14px;">' +
+          '<button class="btn" style="font-size:12px;padding:8px 16px;" onclick="showToast(\'已保存 ✓\')">保存身份卡</button>' +
+          '<button class="btn btn-blue" style="font-size:12px;padding:8px 16px;" onclick="document.getElementById(\'asset-library\').scrollIntoView({behavior:\'smooth\'})">查看资产库</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  setTimeout(function(){ area.style.opacity = '1'; }, 50);
+}
+
+// ================================================================
+// Toast
+// ================================================================
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'toast';
+    t.style.cssText = 'position:fixed;bottom:32px;right:32px;z-index:9999;' +
+      'background:#111;color:#FFE100;padding:12px 24px;' +
+      'border:3px solid #111;box-shadow:5px 5px 0 #111;' +
+      'font-family:\'DM Mono\',monospace;font-size:13px;' +
+      'opacity:0;transition:opacity 0.2s;pointer-events:none;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  setTimeout(function(){ t.style.opacity = '0'; }, 2000);
+}
+
+// ================================================================
+// 情绪拍立得模块
+// ================================================================
+var EP_LENS_DATA = {
+  initial: {
+    rows: [
+      {label:'内容节点', val:'情绪缓冲窗口',     color:'#0B38C8'},
+      {label:'当前策略', val:'允许轻量互动节点', color:'#0B38C8'},
+      {label:'广告状态', val:'等待用户表达',     color:'#fff'}
+    ]
+  },
+  word_chosen: {
+    rows: [
+      {label:'用户表达', val:'想留住',         color:'#D92B1E'},
+      {label:'情绪意图', val:'留存表达型',     color:'#FFE100'},
+      {label:'路由结果', val:'AI 情绪拍立得', color:'#0B38C8'},
+      {label:'品牌承接', val:'MOMERA 瞬野',   color:'#fff'}
+    ]
+  },
+  digital_human: {
+    rows: [
+      {label:'用户表达', val:'想留住',       color:'#D92B1E'},
+      {label:'情绪意图', val:'留存表达型',   color:'#FFE100'},
+      {label:'数字人状态',val:'陪伴回应中', color:'#00FF88'},
+      {label:'品牌承接', val:'MOMERA 瞬野', color:'#fff'}
+    ]
+  },
+  auth: {
+    rows: [
+      {label:'用户表达', val:'想留住',     color:'#D92B1E'},
+      {label:'当前步骤', val:'相机授权中', color:'#FFE100'},
+      {label:'隐私保护', val:'仅本次使用', color:'#00FF88'},
+      {label:'品牌承接', val:'MOMERA 瞬野',color:'#fff'}
+    ]
+  },
+  generating: {
+    rows: [
+      {label:'正在匹配', val:'情绪姿态',       color:'#FFE100'},
+      {label:'正在生成', val:'情绪拍立得',     color:'#FFE100'},
+      {label:'资产类型', val:'情绪卡 · 拍立得',color:'#fff'}
+    ]
+  },
+  result: {
+    rows: [
+      {label:'生成完成', val:'情绪拍立得 ✓',   color:'#00FF88'},
+      {label:'资产归档', val:'AI 数字资产库',  color:'#0B38C8'},
+      {label:'商业价值', val:'品牌升级为共创结果',color:'#FFE100'}
+    ]
+  }
+};
+
+function updateLens_EP(type) {
+  var d = EP_LENS_DATA[type];
+  if (!d) return;
+  var rows = document.getElementById('polaroid-lens-rows');
+  if (!rows) return;
+  rows.innerHTML = d.rows.map(function(r) {
+    return '<div class="lens-row">' +
+      '<span class="lens-label">' + r.label + '</span>' +
+      '<span class="lens-val" style="color:' + r.color + '">' + r.val + '</span>' +
+      '</div>';
+  }).join('');
+}
+
+function showPanel_EP(name) {
+  ['player','digital-human','generating','result'].forEach(function(n) {
+    var el = document.getElementById('ep-panel-' + n);
+    if (el) el.style.display = (n === name) ? 'block' : 'none';
+  });
+}
+
+function setStep_EP(n) {
+  for (var i = 1; i <= 5; i++) {
+    var el = document.getElementById('ep-step-' + i);
+    if (!el) continue;
+    el.classList.remove('active','done');
+    if (i < n)  el.classList.add('done');
+    if (i === n) el.classList.add('active');
+  }
+}
+
+function selectWord(word) {
+  currentWord = word;
+
+  var idolV = document.getElementById('idol-video');
+  if (idolV) idolV.pause();
+
+  var floatEl = document.getElementById('idol-emotion-float');
+  if (floatEl) floatEl.style.display = 'none';
+
+  setStep_EP(3);
+  showPanel_EP('digital-human');
+  updateLens_EP('digital_human');
+
+  // 显示阶段A，隐藏阶段B
+  var phA = document.getElementById('dh-phase-a');
+  var phB = document.getElementById('dh-phase-b');
+  if (phA) phA.style.display = 'block';
+  if (phB) phB.style.display = 'none';
+
+  var dhv = document.getElementById('digital-human-video');
+  if (dhv) { dhv.load(); dhv.play().catch(function(){}); }
+}
+
+function showDhPhaseB(mode) {
+  var dhv = document.getElementById('digital-human-video');
+  if (dhv) dhv.pause();
+
+  var phA = document.getElementById('dh-phase-a');
+  var phB = document.getElementById('dh-phase-b');
+  if (phA) phA.style.display = 'none';
+  if (phB) phB.style.display = 'block';
+
+  var titleEl = document.getElementById('dh-phase-b-title');
+  var camUI   = document.getElementById('camera-ui');
+  var upUI    = document.getElementById('upload-ui');
+
+  if (mode === 'camera') {
+    if (titleEl) titleEl.textContent = '拍下你现在的场景';
+    if (camUI)  camUI.style.display  = 'block';
+    if (upUI)   upUI.style.display   = 'none';
+  } else {
+    if (titleEl) titleEl.textContent = '选择一张照片';
+    if (camUI)  camUI.style.display  = 'none';
+    if (upUI)   upUI.style.display   = 'block';
+  }
+
+  updateLens_EP('auth');
+}
+
+function startGeneration() {
+  var phB = document.getElementById('dh-phase-b');
+  if (phB) phB.style.display = 'none';
+
+  setStep_EP(4);
+  showPanel_EP('generating');
+  updateLens_EP('generating');
+
+  var steps = document.querySelectorAll('#generating-checklist .gen-step');
+  steps.forEach(function(s) {
+    s.style.opacity = '0.25';
+    var icon = s.querySelector('.gen-icon');
+    if (icon) { icon.textContent = ''; icon.style.background = '#fff'; icon.style.borderColor = '#111'; icon.style.color = '#111'; }
+  });
+
+  function activateStep(i, delay) {
+    setTimeout(function() {
+      if (steps[i]) steps[i].style.opacity = '1';
+    }, delay);
+  }
+  function completeStep(i, delay) {
+    setTimeout(function() {
+      if (steps[i]) {
+        var icon = steps[i].querySelector('.gen-icon');
+        if (icon) { icon.textContent = '✓'; icon.style.background = '#0B38C8'; icon.style.borderColor = '#0B38C8'; icon.style.color = '#FFE100'; }
+      }
+    }, delay);
+  }
+
+  activateStep(0, 0);
+  completeStep(0, 900);  activateStep(1, 900);
+  completeStep(1, 1800); activateStep(2, 1800);
+  completeStep(2, 2800);
+
+  setTimeout(function() {
+    setStep_EP(5);
+    showResultPanel(currentWord || 'keep');
+  }, 3200);
+}
+
+function showResultPanel(word) {
+  showPanel_EP('result');
+  updateLens_EP('result');
+
+  var words  = {keep:'想留住', tired:'有点累', stay:'陪我一下'};
+  var types  = {keep:'留存表达型', tired:'情绪释放型', stay:'陪伴需求型'};
+  var quotes = {
+    keep: '这一刻，好像真的值得被留下来。',
+    tired:'就算有点累，这一刻也是你的。',
+    stay: '没关系，我在这里，这一刻我们都在场。'
+  };
+  var tags = {
+    keep: ['#这一刻被留住','#阳台烟火'],
+    tired:['#有点累但很美','#此刻状态'],
+    stay: ['#陪我一下','#和TA同框']
+  };
+
+  var wordEl  = document.getElementById('result-word');
+  var typeEl  = document.getElementById('result-type');
+  var quoteEl = document.getElementById('result-quote');
+  var tagsEl  = document.getElementById('result-tags');
+
+  if (wordEl)  wordEl.textContent  = words[word]  || words.keep;
+  if (typeEl)  typeEl.textContent  = types[word]  || types.keep;
+  if (quoteEl) quoteEl.textContent = quotes[word] || quotes.keep;
+  if (tagsEl)  tagsEl.innerHTML = (tags[word] || tags.keep).map(function(t) {
+    return '<span style="border:1.5px solid #0B38C8;color:#0B38C8;font-family:\'DM Mono\',monospace;font-size:11px;padding:3px 10px;">' + t + '</span>';
+  }).join('');
+}
+
+function resetEmojiFlow() {
+  currentWord = null;
+  showPanel_EP('player');
+  setStep_EP(1);
+  updateLens_EP('initial');
+
+  var idolV = document.getElementById('idol-video');
+  if (idolV) { idolV.pause(); idolV.currentTime = 0; }
+
+  var floatEl = document.getElementById('idol-emotion-float');
+  if (floatEl) floatEl.style.display = 'none';
+
+  var dhv = document.getElementById('digital-human-video');
+  if (dhv) dhv.pause();
+
+  var phA = document.getElementById('dh-phase-a');
+  var phB = document.getElementById('dh-phase-b');
+  if (phA) phA.style.display = 'block';
+  if (phB) phB.style.display = 'none';
+
+  // 重置上传状态
+  var dropZone = document.getElementById('upload-drop-zone');
+  var previewWrap = document.getElementById('upload-preview-wrap');
+  var btnConfirm = document.getElementById('btn-confirm-upload');
+  if (dropZone)    dropZone.style.display    = 'block';
+  if (previewWrap) previewWrap.style.display = 'none';
+  if (btnConfirm)  btnConfirm.style.display  = 'none';
+}
+
+// ================================================================
+// 导航高亮
+// ================================================================
+function initNavHighlight() {
+  var sections = document.querySelectorAll('section[id]');
+  var navLinks = document.querySelectorAll('nav a[href^="#"]');
+  if (!sections.length || !navLinks.length) return;
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        navLinks.forEach(function(a) {
+          a.classList.remove('active-now');
+          if (a.getAttribute('href') === '#' + entry.target.id) {
+            a.classList.add('active-now');
+          }
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(function(s) { observer.observe(s); });
+}
+
+// ================================================================
+// 平滑滚动
+// ================================================================
+function initSmoothScroll() {
+  document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      var target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+}
+
+// ================================================================
+// 上传照片
+// ================================================================
+function initUpload() {
+  var dropZone = document.getElementById('upload-drop-zone');
+  var fileInput = document.getElementById('photo-file-input');
+  var previewWrap = document.getElementById('upload-preview-wrap');
+  var previewImg = document.getElementById('upload-preview-img');
+  var btnConfirm = document.getElementById('btn-confirm-upload');
+
+  if (dropZone && fileInput) {
+    dropZone.onclick = function() { fileInput.click(); };
+    fileInput.onchange = function(e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function(ev) {
+        if (previewImg)  previewImg.src = ev.target.result;
+        if (previewWrap) previewWrap.style.display = 'block';
+        if (dropZone)    dropZone.style.display    = 'none';
+        if (btnConfirm)  btnConfirm.style.display  = 'block';
+      };
+      reader.readAsDataURL(file);
+    };
+  }
+}
+
+// ================================================================
+// 所有按钮绑定（window.load 确保最后执行）
+// ================================================================
+window.addEventListener('load', function() {
+
+  // 初始化通用功能
+  initNavHighlight();
+  initSmoothScroll();
+  initUpload();
+
+  // ── 情绪判断切换按钮初始灰掉 ──
+  var btnTrad = document.getElementById('btn-trad');
+  var btnBuf  = document.getElementById('btn-buffer');
+  if (btnTrad) { btnTrad.style.pointerEvents='none'; btnTrad.style.opacity='0.35'; }
+  if (btnBuf)  { btnBuf.style.pointerEvents='none';  btnBuf.style.opacity='0.35'; }
+
+  // ── 情绪判断切换按钮点击 ──
+  if (btnTrad) btnTrad.onclick = function() { switchMode('trad'); };
+  if (btnBuf)  btnBuf.onclick  = function() { switchMode('buffer'); };
+
+  // ── 情绪判断「开始体验」──
+  var btnE = document.getElementById('btn-start-emotion');
+  if (btnE) {
+    btnE.onclick = function() {
+      if (btnTrad) { btnTrad.style.pointerEvents='auto'; btnTrad.style.opacity='1'; }
+      if (btnBuf)  { btnBuf.style.pointerEvents='auto';  btnBuf.style.opacity='1'; }
+      switchMode('buffer');
+      btnE.textContent = '↺ 重新体验';
+      btnE.onclick = function() {
+        resetPlayer();
+        switchMode('buffer');
+      };
+    };
+  }
+
+  // ── 体育竞猜「开始体验」──
+  var btnS = document.getElementById('btn-start-sports');
+  if (btnS) {
+    btnS.onclick = function() {
+      startSportsExperience();
+      btnS.textContent = '↺ 重新体验';
+      btnS.onclick = function() { location.reload(); };
+    };
+  }
+
+  // ── 体育竞猜阵营按钮 ──
+  var btnL = document.getElementById('btn-lakers');
+  var btnW = document.getElementById('btn-warriors');
+  if (btnL) btnL.onclick = function() { chooseTeam('lakers'); };
+  if (btnW) btnW.onclick = function() { chooseTeam('warriors'); };
+
+  // ── 情绪拍立得「开始体验」──
+  var btnP = document.getElementById('btn-start-polaroid');
+  if (btnP) {
+    btnP.onclick = function() {
+      showPanel_EP('player');
+      setStep_EP(1);
+      updateLens_EP('initial');
+
+      var idolV = document.getElementById('idol-video');
+      if (idolV) {
+        idolV.innerHTML = '<source src="./assets/videos/content_idol_drama.mp4" type="video/mp4">' +
+                          '<source src="/assets/videos/content_idol_drama.mp4" type="video/mp4">';
+        idolV.load();
+        idolV.play().catch(function(){});
+      }
+
+      setTimeout(function() {
+        var f = document.getElementById('idol-emotion-float');
+        if (f) f.style.display = 'block';
+        setStep_EP(2);
+      }, 5000);
+
+      btnP.textContent = '↺ 再体验一次';
+      btnP.onclick = function() {
+        resetEmojiFlow();
+        btnP.textContent = '▶ 开始体验';
+        btnP.onclick = arguments.callee; // 重新绑定重置逻辑
+      };
+    };
+  }
+
+  // ── 情绪引导快捷词 ──
+  var wordKeep  = document.getElementById('word-keep');
+  var wordTired = document.getElementById('word-tired');
+  var wordStay  = document.getElementById('word-stay');
+  if (wordKeep)  wordKeep.onclick  = function() { selectWord('keep'); };
+  if (wordTired) wordTired.onclick = function() { showToast('Demo 中暂未展开'); };
+  if (wordStay)  wordStay.onclick  = function() { showToast('Demo 中暂未展开'); };
+
+  // ── 数字人阶段A按钮 ──
+  var btnCamera = document.getElementById('btn-open-camera');
+  var btnUpload = document.getElementById('btn-upload-photo');
+  var btnRethink = document.getElementById('btn-rethink');
+  if (btnCamera)  btnCamera.onclick  = function() { showDhPhaseB('camera'); };
+  if (btnUpload)  btnUpload.onclick  = function() { showDhPhaseB('upload'); };
+  if (btnRethink) btnRethink.onclick = function() { resetEmojiFlow(); };
+
+  // ── 数字人阶段B：使用示例场景 ──
+  var btnExample = document.getElementById('btn-use-example');
+  if (btnExample) btnExample.onclick = function() { startGeneration(); };
+
+  // ── 上传确认 ──
+  var btnConfirmUpload = document.getElementById('btn-confirm-upload');
+  if (btnConfirmUpload) btnConfirmUpload.onclick = function() { startGeneration(); };
+
+  // ── 结果页按钮 ──
+  var btnSavePolaroid = document.getElementById('btn-save-polaroid');
+  var btnSharePolaroid = document.getElementById('btn-share-polaroid');
+  var btnViewAssets   = document.getElementById('btn-view-assets');
+  var btnAgain        = document.getElementById('btn-again-polaroid');
+  if (btnSavePolaroid)  btnSavePolaroid.onclick  = function() { showToast('已保存 ✓'); };
+  if (btnSharePolaroid) btnSharePolaroid.onclick = function() { showToast('分享链接已生成'); };
+  if (btnViewAssets)    btnViewAssets.onclick    = function() {
+    var el = document.getElementById('asset-library');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+  if (btnAgain) btnAgain.onclick = function() {
+    resetEmojiFlow();
+    var btnP2 = document.getElementById('btn-start-polaroid');
+    if (btnP2) { btnP2.textContent = '▶ 开始体验'; }
+  };
+
+  console.log('✅ 所有按钮绑定完成');
+});
 </script>
 </body>
 </html>
