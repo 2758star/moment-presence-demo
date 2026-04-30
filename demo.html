@@ -1901,6 +1901,161 @@ document.querySelectorAll('video').forEach(v => {
     if(fb) fb.style.display = 'flex';
   });
 });
+
+/* =============================================
+   Start Button Bindings
+   ============================================= */
+
+/* ── 情绪判断「开始体验」按钮 ── */
+const btnStartEmotion = document.getElementById('btn-start-emotion');
+if (btnStartEmotion) {
+  btnStartEmotion.addEventListener('click', () => {
+    // 解锁两个切换按钮
+    const btnTrad = document.getElementById('btn-trad');
+    const btnBuffer = document.getElementById('btn-buffer');
+    if (btnTrad) { btnTrad.style.pointerEvents='auto'; btnTrad.style.opacity='1'; }
+    if (btnBuffer) { btnBuffer.style.pointerEvents='auto'; btnBuffer.style.opacity='1'; }
+
+    // 触发当前激活模式（默认 buffer）
+    switchMode('buffer');
+
+    // 按钮变为「重新体验」
+    btnStartEmotion.textContent = '↺ 重新体验';
+    btnStartEmotion.onclick = () => {
+      if (typeof resetPlayer === 'function') resetPlayer();
+      switchMode('buffer');
+    };
+  });
+}
+
+/* ── 体育竞猜「开始体验」按钮 ── */
+const btnStartSports = document.getElementById('btn-start-sports');
+if (btnStartSports) {
+  btnStartSports.addEventListener('click', () => {
+    // 播放体育视频
+    const sv = document.getElementById('sports-video');
+    if (sv) { sv.load(); sv.play().catch(()=>{}); }
+
+    // 启动5秒倒计时显示竞猜
+    let t = 5;
+    const tipEl = document.getElementById('guess-unlock-tip');
+    const watchTip = document.getElementById('sports-watch-tip');
+    if (watchTip) watchTip.style.display = 'flex';
+    if (tipEl) tipEl.textContent = `竞猜将在 ${t} 秒后开启…`;
+
+    const tipTimer = setInterval(() => {
+      t--;
+      if (tipEl) tipEl.textContent = `竞猜将在 ${t} 秒后开启…`;
+      if (t <= 0) {
+        clearInterval(tipTimer);
+        if (watchTip) watchTip.style.display = 'none';
+        const gp = document.getElementById('guess-phase-1');
+        if (gp) {
+          gp.style.display = 'block';
+          gp.style.opacity = '0';
+          gp.style.transition = 'opacity 0.5s';
+          setTimeout(() => { gp.style.opacity = '1'; }, 50);
+        }
+      }
+    }, 1000);
+
+    // 按钮变为「重新体验」
+    btnStartSports.textContent = '↺ 重新体验';
+    btnStartSports.onclick = () => {
+      const sv2 = document.getElementById('sports-video');
+      if (sv2) { sv2.pause(); sv2.currentTime = 0; sv2.load(); sv2.play().catch(()=>{}); }
+
+      // 重置竞猜状态
+      window.guessChosen = null;
+      const gp1 = document.getElementById('guess-phase-1');
+      const gp2 = document.getElementById('guess-phase-2');
+      const gp3 = document.getElementById('guess-phase-3');
+      if (gp1) { gp1.style.display='none'; gp1.style.opacity='0'; }
+      if (gp2) gp2.style.display = 'none';
+      if (gp3) gp3.style.display = 'none';
+
+      // 重置身份卡
+      const idArea = document.getElementById('identity-card-area');
+      if (idArea) idArea.innerHTML = `
+        <div style="border:3px dashed #CCC;padding:32px 20px;text-align:center;
+                    display:flex;flex-direction:column;align-items:center;gap:12px;">
+          <span style="font-size:32px;">🎴</span>
+          <p style="font-size:14px;color:#CCC;font-family:'DM Mono',monospace;">
+            参与竞猜后生成观赛身份卡</p>
+          <p style="font-size:12px;color:#DDD;">选择阵营即可解锁</p>
+        </div>`;
+
+      // 重置按钮选中状态
+      const btnL = document.getElementById('btn-lakers');
+      const btnW = document.getElementById('btn-warriors');
+      if (btnL) { btnL.style.opacity='1'; btnL.style.cursor='pointer';
+                   btnL.style.transform='none'; btnL.style.boxShadow=''; }
+      if (btnW) { btnW.style.opacity='1'; btnW.style.cursor='pointer';
+                   btnW.style.transform='none'; btnW.style.boxShadow=''; }
+
+      // 重新启动倒计时
+      let t2 = 5;
+      const tipEl2 = document.getElementById('guess-unlock-tip');
+      const watchTip2 = document.getElementById('sports-watch-tip');
+      if (watchTip2) watchTip2.style.display = 'flex';
+      if (tipEl2) tipEl2.textContent = `竞猜将在 ${t2} 秒后开启…`;
+      const tipTimer2 = setInterval(() => {
+        t2--;
+        if (tipEl2) tipEl2.textContent = `竞猜将在 ${t2} 秒后开启…`;
+        if (t2 <= 0) {
+          clearInterval(tipTimer2);
+          if (watchTip2) watchTip2.style.display = 'none';
+          const gp = document.getElementById('guess-phase-1');
+          if (gp) {
+            gp.style.display = 'block';
+            gp.style.opacity = '0';
+            setTimeout(() => { gp.style.opacity = '1'; }, 50);
+          }
+        }
+      }, 1000);
+    };
+  });
+}
+
+/* ── 情绪拍立得「开始体验」按钮 ── */
+const btnStartPolaroid = document.getElementById('btn-start-polaroid');
+if (btnStartPolaroid) {
+  btnStartPolaroid.addEventListener('click', () => {
+    // 显示播放器 panel，激活步骤01
+    if (typeof showPanel_EP === 'function') showPanel_EP('player');
+    if (typeof setStep_EP === 'function') setStep_EP(1);
+
+    // 播放正片
+    const idolV = document.getElementById('idol-video');
+    if (idolV) { idolV.load(); idolV.play().catch(()=>{}); }
+
+    // 5秒后情绪引导浮层出现，步骤02激活
+    setTimeout(() => {
+      const floatEl = document.getElementById('idol-emotion-float');
+      if (floatEl) floatEl.style.display = 'block';
+      if (typeof setStep_EP === 'function') setStep_EP(2);
+    }, 5000);
+
+    // 按钮变为「再体验一次」
+    btnStartPolaroid.textContent = '↺ 再体验一次';
+    btnStartPolaroid.onclick = () => {
+      if (typeof resetEmojiFlow === 'function') resetEmojiFlow();
+      btnStartPolaroid.textContent = '▶ 开始体验';
+      // 重新绑定原始逻辑（递归调用）
+      btnStartPolaroid.onclick = null;
+      btnStartPolaroid.click();
+    };
+  });
+}
+
+/* ── 情绪判断切换按钮初始灰掉 ── */
+(function(){
+  const btnTrad = document.getElementById('btn-trad');
+  const btnBuffer = document.getElementById('btn-buffer');
+  if (btnTrad) { btnTrad.style.pointerEvents='none'; btnTrad.style.opacity='0.4'; }
+  if (btnBuffer) { btnBuffer.style.pointerEvents='none'; btnBuffer.style.opacity='0.4'; }
+})();
+
 </script>
 </body>
 </html>
